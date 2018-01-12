@@ -1,6 +1,6 @@
 <?php
 
-namespace wp_gdpr_regulations\dicontainer;
+namespace wp_gdpr\lib;
 
 
 class Gdpr_Container {
@@ -24,13 +24,13 @@ class Gdpr_Container {
 		 * //TODO register only the interface and name of class
 		 */
 		try {
-			if ( true === GDPR_TESTING ) {
+			if ( defined( 'GDPR_TESTING' )  && true === GDPR_TESTING ) {
 				return self::get_mock( $class_name, $arguments );
 			} else {
 				return self::get_object( $class_name, $arguments );
 			}
 		} catch ( \Exception $e ) {
-			throw new \Exception( 'Class '.$class_name.' is not registered in container' );
+			throw new \Exception( 'Class ' . $class_name . ' is not registered in container' );
 		}
 	}
 
