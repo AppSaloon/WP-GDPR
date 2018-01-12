@@ -30,6 +30,7 @@ define( 'GDPR_URL', plugin_dir_url( __FILE__ ) );
 
 require_once GDPR_DIR . 'lib/appsaloon-autoloader.php';
 
+use wp_gdpr\lib\Appsaloon_Log;
 use wp_gdpr\lib\Gdpr_Container;
 
 

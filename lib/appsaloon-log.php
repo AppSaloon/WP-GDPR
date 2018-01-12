@@ -1,5 +1,5 @@
 <?php
-namespace ot_main\services;
+namespace wp_gdpr\lib;
 
 if ( ! class_exists( 'Log' ) ) {
 	class Appsaloon_Log {
