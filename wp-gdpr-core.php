@@ -34,7 +34,6 @@ include_once GDPR_DIR . 'lib/appsaloon-customtables.php';
 use wp_gdpr\lib\Gdpr_Container;
 
 
-
 class Wp_Gdpr_Core {
 
 	const FORM_SHORTCODE_NAME = 'REQ_CRED_FORM';

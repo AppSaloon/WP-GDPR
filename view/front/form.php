@@ -10,5 +10,5 @@
 	Email:<br>
 	<input type="text" name="email" value="">
 	<br><br>
-	<input type="submit" value="Submit">
+	<input type="submit" name="gdpr_req" value="Submit">
 </form>
