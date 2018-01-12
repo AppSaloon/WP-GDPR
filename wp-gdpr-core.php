@@ -20,14 +20,16 @@
 
 namespace wp_gdpr;
 
-//TODO add frontend form
-//TODO add admin menu
 //TODO add custom table
+//TODO save data in custom table
 
 define( 'GDPR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'GDPR_URL', plugin_dir_url( __FILE__ ) );
 
 require_once GDPR_DIR . 'lib/appsaloon-autoloader.php';
+
+//include to register custom table on plugin activation
+include_once GDPR_DIR . 'lib/appsaloon-customtables.php';
 
 use wp_gdpr\lib\Gdpr_Container;
 
@@ -39,6 +41,7 @@ class Wp_Gdpr_Core {
 
 	public function __construct() {
 		$this->run();
+		$this->execute_on_plugin_activation();
 	}
 
 	public function run() {
@@ -47,7 +50,7 @@ class Wp_Gdpr_Core {
 	}
 
 	public function execute_on_plugin_activation() {
-
+		register_activation_hook( __FILE__, array( 'wp_gdpr\lib\Appsaloon_Customtables', 'create_request_table' ) );
 	}
 }
 

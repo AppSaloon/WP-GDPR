@@ -9,7 +9,7 @@ namespace wp_gdpr\lib;
  * with option to save api key
  */
 class Appsaloon_Menu_Backend {
-	const MENU_PAGE_TITLE = 'ot_flights_menu';
+	const MENU_PAGE_TITLE = 'WP GDPR';
 
 	const PAGE_SLUG = 'page_slug';
 
