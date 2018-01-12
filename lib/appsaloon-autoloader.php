@@ -5,11 +5,13 @@
  */
 class Appsaloon_Autoloader {
 
+	const NAMESPACE_NAME = 'wp_gdpr\\';
+
 	/**
 	 * Register autoloader
 	 */
 	public function __construct() {
-		spl_autoload_register( array( $this, 'social_video_plugin' ) );
+		spl_autoload_register( array( $this, 'autoloader_callback' ) );
 	}
 
 	/**
@@ -17,13 +19,13 @@ class Appsaloon_Autoloader {
 	 *
 	 * @param $class    string  Full name of a class: namespaces\classname
 	 */
-	public function social_video_plugin( $class ) {
-		if ( strpos( $class, 'stany_nodigt_uit\\' ) === 0 ) {
-			$path = substr( $class, strlen( 'stany_nodigt_uit\\' ) );
+	public function autoloader_callback( $class ) {
+		if ( strpos( $class, self::NAMESPACE_NAME ) === 0 ) {
+			$path = substr( $class, strlen( self::NAMESPACE_NAME ) );
 			$path = strtolower( $path );
 			$path = str_replace( '_', '-', $path );
 			$path = str_replace( '\\', DIRECTORY_SEPARATOR, $path ) . '.php';
-			$path = SOCIAL_VIDEO_DIR . DIRECTORY_SEPARATOR . $path;
+			$path = GDPR_DIR . DIRECTORY_SEPARATOR . $path;
 
 			if ( file_exists( $path ) ) {
 				include $path;

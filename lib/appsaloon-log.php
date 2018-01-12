@@ -1,5 +1,5 @@
 <?php
-namespace  ot_main\services;
+namespace ot_main\services;
 
 if ( ! class_exists( 'Log' ) ) {
 	class Appsaloon_Log {
@@ -7,7 +7,8 @@ if ( ! class_exists( 'Log' ) ) {
 		/**
 		 * Session KEY for log
 		 */
-		CONST SESSION_LOG = 'omnia_log';
+		CONST SESSION_LOG = 'appsaloon_log';
+		CONST TABLE_NAME = 'appsaloon_log';
 
 		/**
 		 * Creating of logging table
@@ -15,7 +16,9 @@ if ( ! class_exists( 'Log' ) ) {
 		public static function create_log_table() {
 			global $wpdb;
 
-			$query = "CREATE TABLE " . $wpdb->prefix . "omnia_log (
+			$table_name = $wpdb->prefix . self::TABLE_NAME;
+
+			$query = "CREATE TABLE " . $table_name . " (
 				  id INT(11) NOT NULL AUTO_INCREMENT,
 				  message_type VARCHAR(20) DEFAULT NULL,
 				  message TEXT NOT NULL,
@@ -158,7 +161,9 @@ if ( ! class_exists( 'Log' ) ) {
 						$log['timestamp'] );
 				}
 
-				$query = "INSERT INTO " . $wpdb->prefix . "omnia_log (message_type, message, file, function, line, timestamp) VALUES ";
+				$table_name = $wpdb->prefix . self::TABLE_NAME;
+
+				$query = "INSERT INTO " . $table_name . " (message_type, message, file, function, line, timestamp) VALUES ";
 				$query .= implode( ", ", $values );
 
 				$wpdb->query( $query );

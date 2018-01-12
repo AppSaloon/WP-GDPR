@@ -18,11 +18,20 @@
  * Author URI:        https://www.appsaloon.be
  */
 
-namespace wp_gdpr_regulations;
+namespace wp_gdpr;
 
+//TODO add dependency injection container
+//TODO add autoloader
+//TODO add log system
+//TODO add shortcode
+//TODO add frontend form
+
+use wp_gdpr\config\Startup_Config;
 
 define( 'GDPR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'GDPR_URL', plugin_dir_url( __FILE__ ) );
+
+require_once GDPR_DIR . 'lib/appsaloon-autoloader.php';
 
 class Wp_Gdpr_Core {
 
@@ -31,7 +40,7 @@ class Wp_Gdpr_Core {
 	}
 
 	public function run() {
-
+new Startup_Config();
 	}
 
 	public function execute_on_plugin_activation() {
