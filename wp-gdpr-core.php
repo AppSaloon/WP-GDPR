@@ -20,10 +20,9 @@
 
 namespace wp_gdpr;
 
-//TODO add dependency injection container
-//TODO add log system
-//TODO add shortcode
 //TODO add frontend form
+//TODO add admin menu
+//TODO add custom table
 
 define( 'GDPR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'GDPR_URL', plugin_dir_url( __FILE__ ) );
