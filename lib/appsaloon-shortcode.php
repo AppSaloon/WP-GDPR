@@ -1,6 +1,6 @@
 <?php
 
-namespace stany_nodigt_uit\services;
+namespace wp_gdpr\lib;
 
 class Appsaloon_Shortcode {
 	/**
@@ -11,19 +11,24 @@ class Appsaloon_Shortcode {
 	 * shortcode name
 	 */
 	protected $shortcode_name;
-
-	/**
-	 * allows to register shortcode name and arguments
-	 */
-	public function __construct( $shortcode_name, $shortcode_arguments ) {
-		$this->shortcode_arguments = $shortcode_arguments;
-		$this->shortcode_name      = $shortcode_name;
-	}
-
 	/**
 	 * content of shortcode
 	 */
 	protected $content;
+
+	/**
+	 * allows to register shortcode name and arguments
+	 */
+	public function __construct( $args ) {
+		extract( $args );
+
+		if ( isset( $arguments ) ) {
+			$this->shortcode_arguments = $arguments;
+		}
+		if ( isset( $name ) ) {
+			$this->shortcode_name = $name;
+		}
+	}
 
 	/**
 	 * add content that should be showd in shortcode

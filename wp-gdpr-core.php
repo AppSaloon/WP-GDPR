@@ -30,12 +30,13 @@ define( 'GDPR_URL', plugin_dir_url( __FILE__ ) );
 
 require_once GDPR_DIR . 'lib/appsaloon-autoloader.php';
 
-use wp_gdpr\lib\Appsaloon_Log;
 use wp_gdpr\lib\Gdpr_Container;
 
 
 
 class Wp_Gdpr_Core {
+
+	const FORM_SHORTCODE_NAME = 'REQ_CRED_FORM';
 
 	public function __construct() {
 		$this->run();
@@ -43,6 +44,7 @@ class Wp_Gdpr_Core {
 
 	public function run() {
 		Gdpr_Container::make('wp_gdpr\config\Startup_Config');
+		Gdpr_Container::make('wp_gdpr\controller\Controller_Credentials_Request',  self::FORM_SHORTCODE_NAME );
 	}
 
 	public function execute_on_plugin_activation() {
