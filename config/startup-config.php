@@ -3,10 +3,17 @@
 namespace wp_gdpr\config;
 
 
+use wp_gdpr\lib\Gdpr_Container;
+
 class Startup_Config {
 
 	public function __construct() {
 		$this->execute_on_script_shutdown();
+		$this->basic_config();
+	}
+
+	public function basic_config( ) {
+		Gdpr_Container::make('wp_gdpr\lib\Appsaloon_Menu_Backend');
 	}
 
 
