@@ -18,27 +18,26 @@ abstract class Form_Validation_Model {
 	 */
 	public $list_of_inputs;
 
-	public function __construct( array $list_of_inputs ) {
-
+	public function __construct( array $list_of_inputs, $hook = 'init' ) {
 		$this->list_of_inputs = $list_of_inputs;
-
-		add_action( 'init', array( $this, 'post_request' ), 10, $list_of_inputs );
+		if ( ! has_action( 'init', array( $this, 'post_request' ) ) ) {
+			add_action( $hook, array( $this, 'post_request' ), 10 );
+		}
 	}
 
 
-	public function post_request( array $list_of_inputs ) {
+	public function post_request() {
+		$list_of_inputs = $this->list_of_inputs;
 
 		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
 			return;
 		}
-
 
 		if ( ! $this->validate_data( $list_of_inputs ) ) {
 			$this->after_failure_validation( $list_of_inputs );
 
 		}
 
-		//TODO save in database
 		$this->after_successful_validation( $list_of_inputs );
 	}
 
@@ -58,18 +57,16 @@ abstract class Form_Validation_Model {
 					return false;
 				}
 				//if is empty
-				if (  empty( $_REQUEST[ $key ] ) ) {
+				if ( empty( $_REQUEST[ $key ] ) ) {
 					return false;
 				}
 			}
 
 			//for every input we can add custom sanitation
-			if (  ! apply_filters('gdpr_sanitize_'. $key , $_REQUEST[ $key ]) )
-			{
+			if ( ! apply_filters( 'gdpr_sanitize_' . $key, $_REQUEST[ $key ] ) ) {
 				return false;
 			}
 		}
-
 
 		return true;
 	}
