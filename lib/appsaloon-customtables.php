@@ -11,9 +11,9 @@ class Appsaloon_Customtables {
 		$table_name = $wpdb->prefix . self::REQUESTS_TABLE_NAME;
 
 		$query      = "CREATE TABLE " . $table_name . " (
-			ID INT(10) DEFAULT NULL,
-			email VARCHAR(20) DEFAULT NULL,
-			name VARCHAR(5) DEFAULT NULL,
+			ID INT(10) NOT NULL AUTO_INCREMENT,
+			email VARCHAR(60) DEFAULT NULL,
+			name VARCHAR(120) DEFAULT NULL,
 			timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (ID)
 		)";

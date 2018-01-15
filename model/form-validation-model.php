@@ -35,7 +35,7 @@ abstract class Form_Validation_Model {
 
 		if ( ! $this->validate_data( $list_of_inputs ) ) {
 			$this->after_failure_validation( $list_of_inputs );
-
+			return;
 		}
 
 		$this->after_successful_validation( $list_of_inputs );
