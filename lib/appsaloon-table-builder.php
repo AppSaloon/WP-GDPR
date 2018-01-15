@@ -46,7 +46,7 @@ class Appsaloon_Table_Builder {
 		<?php foreach ( $this->data as $rows ) : ?>
             <tr>
 				<?php foreach ( $rows as $single_row ) : ?>
-                    <td><?php echo $single_row; ?></td>
+                    <td><?php  echo $single_row; ?></td>
 				<?php endforeach; ?>
             </tr>
 		<?php endforeach; ?>

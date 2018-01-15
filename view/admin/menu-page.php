@@ -1,8 +1,12 @@
-<?php
-echo 'test';
+<?php namespace wp_gdpr\view\admin; ?>
+    <h2>List of users that requested for information</h2>
+	<?php
+use wp_gdpr\controller\Controller_Menu_Page;
 
-$table = new \wp_gdpr\lib\Appsaloon_Table_Builder( array( 'head1', 'head2' ), array(
-	array( 'row!', 'row12' ),
-	array( 'row2', 'row22' )
-), array( 'footer!,j', 'footer2' ) );
-$table->print_table();
+$controller = new Controller_Menu_Page();
+$controller->build_table_with_requests();
+?>
+    <h2>List of plugins that store data of users</h2>
+<?php $controller->build_table_with_plugins();
+
+
