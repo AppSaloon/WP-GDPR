@@ -6,10 +6,10 @@
 <?php if ( 'GET' == $_SERVER['REQUEST_METHOD'] ): ?>
     <form action="" method="post">
         Username:<br>
-        <input type="text" name="username" value="" required>
+        <input type="text" name="username" value="">
         <br>
         Email:<br>
-        <input type="text" name="email" value="" required>
+        <input type="email" name="email" value="" required>
         <br><br>
         <input type="submit" name="gdpr_req" value="Submit">
     </form>

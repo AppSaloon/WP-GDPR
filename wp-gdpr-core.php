@@ -44,16 +44,18 @@ class Wp_Gdpr_Core {
 		//list of inputs in request form
 		$this->request_form_inputs = array(
 			'email'    => 'required',
-			'username' => 'required',
+			'username' => 'optional',
 			'gdpr_req' => 'required'
 		);
 		$this->run();
 		$this->execute_on_plugin_activation();
+
 	}
 
 	public function run() {
 		Gdpr_Container::make( 'wp_gdpr\config\Startup_Config' );
 		Gdpr_Container::make( 'wp_gdpr\controller\Controller_Credentials_Request', self::FORM_SHORTCODE_NAME );
+		Gdpr_Container::make( 'wp_gdpr\controller\Controller_Comments');
 		Gdpr_Container::make( 'wp_gdpr\controller\Controller_Form_Submit',  $this->request_form_inputs );
 	}
 
@@ -63,3 +65,4 @@ class Wp_Gdpr_Core {
 }
 
 new Wp_Gdpr_Core();
+
