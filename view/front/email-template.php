@@ -1,3 +1,3 @@
 <?php
-echo 'thos is email template';
+echo 'Check your comments here: ';
 echo $url;

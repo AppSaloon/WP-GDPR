@@ -44,30 +44,6 @@ class Controller_Comments {
 		include_once GDPR_DIR . 'view/front/gdpr-template.php';
 		die;
 	}
-	//TODO test
-	//TODO add status of request
-	//TODO update status of request
-	public function send_email() {
-		if ( isset( $_REQUEST['gdpr_emails'] ) && is_array( $_REQUEST['gdpr_emails'] ) ) {
-			foreach ( $_REQUEST['gdpr_emails'] as $single_address ) {
-				$to      = $single_address;
-				$subject = 'Data request';
-				$content = $this->get_email_content( $single_address );
-
-				wp_mail( $to, $subject, $content, array() );
-			}
-		}
-	}
-
-	public function get_email_content( $single_adress ) {
-		$url = $this->create_unique_url( $single_adress );
-
-		return include_once GDPR_DIR . 'view/front/email-template.php';
-	}
-
-	public function create_unique_url( $email_address ) {
-		return home_url() . base64_encode( 'gdpr#' . $email_address );
-	}
 
 	public function create_table_with_comments() {
 		$comments = $this->get_all_comments_by_author( $this->email_request );

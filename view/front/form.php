@@ -5,9 +5,6 @@
 ?>
 <?php if ( 'GET' == $_SERVER['REQUEST_METHOD'] ): ?>
     <form action="" method="post">
-        Username:<br>
-        <input type="text" name="username" value="">
-        <br>
         Email:<br>
         <input type="email" name="email" value="" required>
         <br><br>
