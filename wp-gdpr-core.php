@@ -49,7 +49,6 @@ class Wp_Gdpr_Core {
 		);
 		$this->run();
 		$this->execute_on_plugin_activation();
-
 	}
 
 	public function run() {

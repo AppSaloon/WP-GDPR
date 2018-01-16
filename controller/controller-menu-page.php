@@ -11,14 +11,36 @@ class Controller_Menu_Page {
 
 		$query = "SELECT * FROM {$wpdb->prefix}gdpr_requests";
 
-		$requesting_users = $wpdb->get_results( $query, ARRAY_N );
+		$requesting_users = $wpdb->get_results( $query, ARRAY_A );
+		$form_content     = $this->get_form_content( $requesting_users );
 
 		$table = new Appsaloon_Table_Builder(
 			array( 'id', 'username', 'email', 'requested at' ),
 			$requesting_users
-			, array() );
+			, array( $form_content ) );
 
 		$table->print_table();
+	}
+
+	public function print_inputs_with_emails() {
+		global $wpdb;
+
+		$query = "SELECT * FROM {$wpdb->prefix}gdpr_requests";
+
+		$requesting_users = $wpdb->get_results( $query, ARRAY_A );
+
+		foreach ($requesting_users as $user)
+		{
+			echo '<input hidden name="gdpr_emails[]" value="'.$user['email'].'">';
+		}
+
+	}
+
+	public function get_form_content( $requesting_users ) {
+		ob_start();
+		$controller = $this;
+		include_once GDPR_DIR . 'view/admin/small-form.php';
+		return ob_get_clean();
 	}
 
 	public function build_table_with_plugins() {
