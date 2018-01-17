@@ -43,6 +43,10 @@ class Controller_Menu_Page {
 		$table->print_table();
 	}
 
+	/**
+	 * @return array|null|object
+	 * get all records from gdpr_requests table
+	 */
 	public function get_requests_from_gdpr_table() {
 		global $wpdb;
 
@@ -64,6 +68,12 @@ class Controller_Menu_Page {
 		return ob_get_clean();
 	}
 
+	/**
+	 * @param $data
+	 *
+	 * @return mixed
+	 * add checkbox element in array
+	 */
 	public function map_checkboxes_send_email( $data ) {
 
 		$data['checkbox'] = $this->create_single_input_with_email( $data['email'] );
@@ -104,6 +114,9 @@ class Controller_Menu_Page {
 		return $data;
 	}
 
+	/**
+	 * this function is not in use
+	 */
 	public function print_inputs_with_emails() {
 		global $wpdb;
 
@@ -142,6 +155,12 @@ class Controller_Menu_Page {
 		}
 	}
 
+	/**
+	 * @param $single_adress
+	 *
+	 * @return string content of email
+	 *
+	 */
 	public function get_email_content( $single_adress ) {
 		ob_start();
 		$url = $this->create_unique_url( $single_adress );
@@ -150,6 +169,13 @@ class Controller_Menu_Page {
 		return ob_get_clean();
 	}
 
+	/**
+	 * @param $email_address
+	 *
+	 * @return string
+	 * create url
+	 * encode gdpr#example@email.com into base64
+	 */
 	public function create_unique_url( $email_address ) {
 		return home_url() . '/' . base64_encode( 'gdpr#' . $email_address );
 	}
