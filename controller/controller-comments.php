@@ -8,7 +8,8 @@ use wp_gdpr\lib\Appsaloon_Table_Builder;
 class Controller_Comments {
 
 	/**
-	 * @var email from unique url
+	 * @var $email_request string
+	 * this email is used to decode and encode unique url
 	 */
 	public $email_request;
 
@@ -16,6 +17,9 @@ class Controller_Comments {
 		$this->redirect_template();
 	}
 
+	/**
+	 * redirect template when GET request for unique url
+	 */
 	public function redirect_template() {
 		if ( $this->decode_url_request() ) {
 			add_action( 'template_redirect', array( $this, 'get_template' ) );
@@ -27,10 +31,18 @@ class Controller_Comments {
 		}
 	}
 
+	/**
+	 * @return bool
+	 * example url home.be/gdpr#example@mail.com
+	 */
 	public function decode_url_request() {
+		//remove slash
 		$substring = substr( $_SERVER['REQUEST_URI'], 1 );
+		//decode base64 result is gdpr#example@mail.com
 		$decoded   = base64_decode( $substring );
 		if ( strpos( $decoded, 'gdpr#' ) !== false ) {
+			//explode into array( 'gdpr', 'example@email.com' )
+			//get second element from array
 			$email               = explode( '#', $decoded )[1];
 			$this->email_request = $email;
 
@@ -40,6 +52,11 @@ class Controller_Comments {
 		return false;
 	}
 
+	/**
+	 * @param $email
+	 * update status in custom gdpr_requests table
+	 * status 2 is: email sent
+	 */
 	public function update_gdpr_status( $email ) {
 		global $wpdb;
 
@@ -48,16 +65,21 @@ class Controller_Comments {
 		$wpdb->update( $table_name, array( 'status' => 2 ), array( 'email' => $email ) );
 	}
 
-	public function count_comments( $comments ) {
-		return count( $comments );
-	}
-
+	/**
+	 * get template to show comments and other data
+	 * about user with requested email address
+	 * set variable $controller to use in template
+	 */
 	public function get_template() {
 		$controller = $this;
 		include_once GDPR_DIR . 'view/front/gdpr-template.php';
 		die;
 	}
 
+	/**
+	 * build table with all comments
+	 * selected by email address
+	 */
 	public function create_table_with_comments() {
 		$comments = $this->get_all_comments_by_author( $this->email_request );
 		$comments = $this->filter_comments( $comments );
@@ -70,6 +92,12 @@ class Controller_Comments {
 		$table->print_table();
 	}
 
+	/**
+	 * @param $author_email
+	 *
+	 * @return array|int
+	 * get all comments from default comments table
+	 */
 	public function get_all_comments_by_author( $author_email ) {
 		return get_comments( array( 'author_email' => $author_email ) );
 	}
