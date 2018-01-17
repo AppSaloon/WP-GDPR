@@ -19,6 +19,11 @@ class Controller_Comments {
 	public function redirect_template() {
 		if ( $this->decode_url_request() ) {
 			add_action( 'template_redirect', array( $this, 'get_template' ) );
+
+			/**
+			 * update status to 'url visited'
+			 */
+			$this->update_gdpr_status( $this->email_request );
 		}
 	}
 
@@ -33,6 +38,14 @@ class Controller_Comments {
 		}
 
 		return false;
+	}
+
+	public function update_gdpr_status( $email ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'gdpr_requests';
+
+		$wpdb->update( $table_name, array( 'status' => 2 ), array( 'email' => $email ) );
 	}
 
 	public function count_comments( $comments ) {
