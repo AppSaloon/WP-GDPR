@@ -16,10 +16,22 @@ class Request_Form extends Form_Validation_Model {
 		parent::__construct( $list_of_inputs );
 	}
 
+	/**
+	 * @param $input_value
+	 *
+	 * @return string
+	 *
+	 * this filter is triggered post_request function in form_validation_model
+	 */
 	public function sanitize_email( $input_value ) {
 		return sanitize_email( $input_value );
 	}
 
+	/**
+	 * @param $list_of_inputs
+	 *
+	 * save request info in custom table
+	 */
 	public function after_successful_validation( $list_of_inputs ) {
 		//save in database
 		global $wpdb;
@@ -36,6 +48,9 @@ class Request_Form extends Form_Validation_Model {
 		);
 	}
 
+	/**
+	 *  do nothing when validation fail
+	 */
 	public function after_failure_validation( $list_of_inputs ) {
 		//do nothing
 	}

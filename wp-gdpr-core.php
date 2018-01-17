@@ -20,9 +20,6 @@
 
 namespace wp_gdpr;
 
-//TODO add custom table
-//TODO save data in custom table
-
 define( 'GDPR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'GDPR_URL', plugin_dir_url( __FILE__ ) );
 

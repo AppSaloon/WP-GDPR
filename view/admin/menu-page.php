@@ -1,4 +1,8 @@
-<?php namespace wp_gdpr\view\admin; ?>
+<?php namespace wp_gdpr\view\admin;
+/**
+ * this template is to show manu page in admin-menu
+ */
+?>
     <h2>List of users that requested for information</h2>
 	<?php
 use wp_gdpr\lib\Gdpr_Container;
