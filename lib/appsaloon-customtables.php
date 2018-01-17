@@ -13,7 +13,7 @@ class Appsaloon_Customtables {
 		$query      = "CREATE TABLE " . $table_name . " (
 			ID INT(10) NOT NULL AUTO_INCREMENT,
 			email VARCHAR(60) DEFAULT NULL,
-			name VARCHAR(120) DEFAULT NULL,
+			status INT(2) DEFAULT NULL,
 			timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (ID)
 		)";

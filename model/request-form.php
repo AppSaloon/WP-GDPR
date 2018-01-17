@@ -30,6 +30,7 @@ class Request_Form extends Form_Validation_Model {
 			$table_name,
 			array(
 				'email'     => $_REQUEST['email'],
+				'status'     => 0,
 				'timestamp' => current_time( 'mysql' )
 			)
 		);

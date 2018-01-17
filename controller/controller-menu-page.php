@@ -24,8 +24,9 @@ class Controller_Menu_Page {
 		$requesting_users = $wpdb->get_results( $query, ARRAY_A );
 		$form_content     = $this->get_form_content( $requesting_users );
 
-		$table = new Appsaloon_Table_Builder(
-			array( 'id', 'email','',  'requested at' ),
+		$requesting_users = array_map( array( $this, 'map_request_status' ), $requesting_users );
+		$table            = new Appsaloon_Table_Builder(
+			array( 'id', 'email', '', 'requested at', 'status' ),
 			$requesting_users
 			, array( $form_content ) );
 
@@ -39,6 +40,30 @@ class Controller_Menu_Page {
 
 		return ob_get_clean();
 	}
+
+	/**
+	 * @param $data
+	 *
+	 * @return mixed
+	 *
+	 * callback to map status from int to string
+	 */
+	public function map_request_status( $data ) {
+
+		switch ( $data['status'] ) {
+			case 0:
+				$data['status'] = 'waiting for email';
+				break;
+			case 1:
+				$data['status'] = 'email sent';
+				break;
+			case 2:
+				$data['status'] = 'url is visited';
+				break;
+		}
+
+		return $data;
+	}
 	//TODO test
 	//TODO add status of request
 	//TODO update status of request
@@ -51,7 +76,14 @@ class Controller_Menu_Page {
 		$requesting_users = $wpdb->get_results( $query, ARRAY_A );
 
 		foreach ( $requesting_users as $user ) {
-			echo '<input hidden name="gdpr_emails[]" value="' . $user['email'] . '">';
+			/**
+			 * if status is 0
+			 * email is not sent
+			 *
+			 */
+			if ( $user['status'] == 0 ) {
+				echo '<input hidden name="gdpr_emails[]" value="' . $user['email'] . '">';
+			}
 		}
 
 	}
@@ -59,11 +91,14 @@ class Controller_Menu_Page {
 	public function send_email() {
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_emails'] ) && is_array( $_REQUEST['gdpr_emails'] ) ) {
 			foreach ( $_REQUEST['gdpr_emails'] as $single_address ) {
-				$to      = $single_address;
-				$subject = 'Data request';
-				$content = $this->get_email_content( $single_address );
+				$single_address = sanitize_email( $single_address );
+				$to             = $single_address;
+				$subject        = 'Data request';
+				$content        = $this->get_email_content( $single_address );
 
 				wp_mail( $to, $subject, $content, array() );
+
+				$this->update_gdpr_request_status( $single_address );
 			}
 		}
 	}
@@ -78,6 +113,14 @@ class Controller_Menu_Page {
 
 	public function create_unique_url( $email_address ) {
 		return home_url() . '/' . base64_encode( 'gdpr#' . $email_address );
+	}
+
+	public function update_gdpr_request_status( $email ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'gdpr_requests';
+
+		$wpdb->update( $table_name, array( 'status' => 1 ), array( 'email' => $email ) );
 	}
 
 	public function build_table_with_plugins() {
