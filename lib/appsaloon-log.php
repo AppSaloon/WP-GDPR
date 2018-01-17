@@ -8,8 +8,10 @@ if ( ! class_exists( 'Log' ) ) {
 		 * Session KEY for log
 		 */
 		CONST SESSION_LOG = 'appsaloon_log';
+		/**
+		 * table name without prefix
+		 */
 		CONST TABLE_NAME = 'appsaloon_log';
-
 		/**
 		 * Creating of logging table
 		 */

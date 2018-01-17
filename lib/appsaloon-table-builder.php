@@ -3,6 +3,12 @@
 
 namespace wp_gdpr\lib;
 
+/**
+ * Class Appsaloon_Table_Builder
+ * @package wp_gdpr\lib
+ *
+ * allows to build simple table
+ */
 class Appsaloon_Table_Builder {
 
 	public $custom_classes;
@@ -20,10 +26,16 @@ class Appsaloon_Table_Builder {
 		$this->footer         = $footer;
 	}
 
+	/**
+	 * table open tab
+	 */
 	public function open_table() {
 		?><table class="<?php echo $this->custom_classes; ?>"><?php
 	}
 
+	/**
+     * build head
+     */
 	public function build_head() {
 		if ( empty( $this->head ) ) {
 			return;
@@ -40,6 +52,9 @@ class Appsaloon_Table_Builder {
 	}
 
 
+	/**
+	 * show body
+	 */
 	public function build_body() {
 		?>
         <tbody>
@@ -54,6 +69,9 @@ class Appsaloon_Table_Builder {
 		<?php
 	}
 
+	/**
+	 * simple footer
+	 */
 	public function build_footer() {
 		if ( empty( $this->footer ) ) {
 			return;
@@ -69,10 +87,16 @@ class Appsaloon_Table_Builder {
 		<?php
 	}
 
+	/**
+	 * close tag of table
+	 */
 	public function close_table() {
 		?></table><?php
 	}
 
+	/**
+	 * show table
+	 */
 	public function print_table() {
         $this->open_table();
 		$this->build_head();

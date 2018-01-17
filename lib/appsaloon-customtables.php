@@ -3,8 +3,14 @@ namespace wp_gdpr\lib;
 
 class Appsaloon_Customtables {
 
+	/**
+	 * name of table without prefix
+	 */
 	const REQUESTS_TABLE_NAME = 'gdpr_requests';
-
+	/**
+	 * create custom table
+	 * use dbDelta()
+	 */
 	public static function create_request_table() {
 		global $wpdb;
 

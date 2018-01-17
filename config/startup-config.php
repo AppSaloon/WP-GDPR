@@ -16,11 +16,6 @@ class Startup_Config {
 		Gdpr_Container::make('wp_gdpr\lib\Appsaloon_Menu_Backend');
 	}
 
-
-	public function execute_on_plugin_activation() {
-
-	}
-
 	/**
 	 * add Logging when shutdown script
 	 */

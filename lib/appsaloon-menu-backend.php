@@ -3,10 +3,7 @@
 namespace wp_gdpr\lib;
 
 /**
- * Class Menu_Controller
- * @package ot_hotel\controller
- * simple controller to make menu page
- * with option to save api key
+ * lib element to add menu page
  */
 class Appsaloon_Menu_Backend {
 	const MENU_PAGE_TITLE = 'WP GDPR';

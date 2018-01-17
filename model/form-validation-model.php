@@ -25,7 +25,9 @@ abstract class Form_Validation_Model {
 		}
 	}
 
-
+	/**
+	 * validate submitted data via POST
+	 */
 	public function post_request() {
 		$list_of_inputs = $this->list_of_inputs;
 
@@ -71,10 +73,18 @@ abstract class Form_Validation_Model {
 		return true;
 	}
 
+	/**
+	 * @param $list_of_inputs
+	 * this function is extended in request_form model
+	 */
 	public function after_failure_validation( $list_of_inputs ) {
 		//do something
 	}
 
+	/**
+	 * @param $list_of_inputs
+	 * this function is extended in request_form model
+	 */
 	public function after_successful_validation( $list_of_inputs ) {
 		//do something
 	}
