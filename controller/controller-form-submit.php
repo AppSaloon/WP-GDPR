@@ -13,6 +13,9 @@ class Controller_Form_Submit {
 		$this->handle_form_submition( $list_of_inputs );
 	}
 
+	/**
+	 * pass list of inputs to Request form
+	 */
 	public function handle_form_submition( $list_of_inputs ) {
 		Gdpr_Container::make( 'wp_gdpr\model\Request_Form', $list_of_inputs );
 	}

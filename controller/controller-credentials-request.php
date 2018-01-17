@@ -13,6 +13,10 @@ class Controller_Credentials_Request {
 		$this->add_form_shortcode( $name );
 	}
 
+	/**
+	 * add shortcode to show form ( allows to send request for users )
+	 * @param $name
+	 */
 	public function add_form_shortcode( $name ) {
 		$shortcode = Gdpr_Container::make( 'wp_gdpr\lib\Appsaloon_Shortcode', array( 'name' => $name ) );
 		$shortcode->add_content( $this->get_form_html() );
