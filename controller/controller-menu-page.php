@@ -25,8 +25,9 @@ class Controller_Menu_Page {
 		$form_content     = $this->get_form_content( $requesting_users );
 
 		$requesting_users = array_map( array( $this, 'map_request_status' ), $requesting_users );
+		$requesting_users = array_map( array( $this, 'map_checkboxes_send_email' ), $requesting_users );
 		$table            = new Appsaloon_Table_Builder(
-			array( 'id', 'email', '', 'requested at', 'status' ),
+			array( 'id',  'email', '', 'requested at', 'status' , 'send email'),
 			$requesting_users
 			, array( $form_content ) );
 
@@ -41,6 +42,20 @@ class Controller_Menu_Page {
 		return ob_get_clean();
 	}
 
+	public function map_checkboxes_send_email( $data ) {
+
+		$data['checkbox'] = $this->print_single_input_with_email( $data['email'] );
+
+		return $data;
+	}
+
+	public function print_single_input_with_email( $email ) {
+
+		return '<input type="checkbox" form="gdpr_form"  name="gdpr_emails[]" value="' . $email . '">';
+	}
+	//TODO test
+	//TODO add status of request
+	//TODO update status of request
 	/**
 	 * @param $data
 	 *
@@ -64,9 +79,6 @@ class Controller_Menu_Page {
 
 		return $data;
 	}
-	//TODO test
-	//TODO add status of request
-	//TODO update status of request
 
 	public function print_inputs_with_emails() {
 		global $wpdb;
@@ -88,7 +100,8 @@ class Controller_Menu_Page {
 
 	}
 
-	public function send_email() {
+	public
+	function send_email() {
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_emails'] ) && is_array( $_REQUEST['gdpr_emails'] ) ) {
 			foreach ( $_REQUEST['gdpr_emails'] as $single_address ) {
 				$single_address = sanitize_email( $single_address );
@@ -103,7 +116,10 @@ class Controller_Menu_Page {
 		}
 	}
 
-	public function get_email_content( $single_adress ) {
+	public
+	function get_email_content(
+		$single_adress
+	) {
 		ob_start();
 		$url = $this->create_unique_url( $single_adress );
 		include GDPR_DIR . 'view/front/email-template.php';
@@ -111,11 +127,17 @@ class Controller_Menu_Page {
 		return ob_get_clean();
 	}
 
-	public function create_unique_url( $email_address ) {
+	public
+	function create_unique_url(
+		$email_address
+	) {
 		return home_url() . '/' . base64_encode( 'gdpr#' . $email_address );
 	}
 
-	public function update_gdpr_request_status( $email ) {
+	public
+	function update_gdpr_request_status(
+		$email
+	) {
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . 'gdpr_requests';
@@ -123,7 +145,8 @@ class Controller_Menu_Page {
 		$wpdb->update( $table_name, array( 'status' => 1 ), array( 'email' => $email ) );
 	}
 
-	public function build_table_with_plugins() {
+	public
+	function build_table_with_plugins() {
 
 		$plugins = get_plugins();
 		$plugins = array_map( function ( $k ) {
@@ -147,7 +170,10 @@ class Controller_Menu_Page {
 	 *
 	 * @return array
 	 */
-	public function filter_plugins( array $plugins ) {
+	public
+	function filter_plugins(
+		array $plugins
+	) {
 
 		return array_filter( $plugins, function ( $data ) {
 			$plugin_name = strtolower( $data[0] );

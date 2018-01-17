@@ -4,7 +4,7 @@
  * allows to send email with unique urls to users
  */
 ?>
-<form method="post">
-    <?php $controller->print_inputs_with_emails(); ?>
-    <input type="submit" class="button button-primary" name="send_gdp_emails" value="Send email for all requests">
+<form method="post" id="gdpr_form">
+    <?php //$controller->print_inputs_with_emails(); ?>
+    <input type="submit" class="button button-primary" name="send_gdp_emails" value="Send emails">
 </form>
