@@ -32,7 +32,7 @@ class Startup_Config {
 	 * create page with shortcode
 	 */
 	public function create_page() {
-		if ( true  === get_option( 'gdpr_page' , true) ) {
+		if ( true === get_option( 'gdpr_page', true ) ) {
 			add_action( 'init', function () {
 				wp_insert_post( array(
 					'post_type'    => 'page',
@@ -46,3 +46,5 @@ class Startup_Config {
 		}
 	}
 }
+
+

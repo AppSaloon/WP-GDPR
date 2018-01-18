@@ -4,6 +4,7 @@
 namespace wp_gdpr\controller;
 
 use wp_gdpr\lib\Appsaloon_Table_Builder;
+use wp_gdpr\lib\Gdpr_Container;
 
 class Controller_Menu_Page {
 
@@ -148,6 +149,8 @@ class Controller_Menu_Page {
 				$subject        = 'Data request';
 				$content        = $this->get_email_content( $single_address );
 
+				$this->set_notice();
+
 				wp_mail( $to, $subject, $content, array() );
 
 				$this->update_gdpr_request_status( $single_address );
@@ -225,5 +228,14 @@ class Controller_Menu_Page {
 				}
 			}
 		} );
+	}
+
+	public function set_notice() {
+		/**
+		 * set notice
+		 */
+		$notice = Gdpr_Container::make( 'wp_gdpr\lib\Appsaloon_Notice' );
+		$notice->set_message( 'Email sent' );
+		$notice->register_notice();
 	}
 }
