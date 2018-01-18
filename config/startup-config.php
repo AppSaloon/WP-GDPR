@@ -37,7 +37,7 @@ class Startup_Config {
 				wp_insert_post( array(
 					'post_type'    => 'page',
 					'post_status'  => 'publish',
-					'post_title'   => 'GDPR - Request personal data',
+					'post_title'   => __('GDPR - Request personal data', 'wp_gdpr'),
 					'post_content' => '[REQ_CRED_FORM]'
 				) );
 			} );

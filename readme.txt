@@ -34,7 +34,7 @@ In the third stage they can view, update and download their personal data or ask
 
 == Screenshots ==
 1. WP-GDPR backend - overview of requests
-2. WP-GDPR frontend - form where visitors can enter their email and ask to view there personal data
+2. WP-GDPR frontend - form where visitors can enter their e-mail and ask to view there personal data
 3. WP-GDPR frontend - form succes message
 
 == Frequently Asked Questions ==

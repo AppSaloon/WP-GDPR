@@ -9,7 +9,7 @@ class Controller_Comments {
 
 	/**
 	 * @var $email_request string
-	 * this email is used to decode and encode unique url
+	 * this e-mail is used to decode and encode unique url
 	 */
 	public $email_request;
 
@@ -62,7 +62,7 @@ class Controller_Comments {
 	/**
 	 * @param $email
 	 * update status in custom gdpr_requests table
-	 * status 2 is: email sent
+	 * status 2 is: e-mail send
 	 */
 	public function update_gdpr_status( $email ) {
 		global $wpdb;
@@ -74,7 +74,7 @@ class Controller_Comments {
 
 	/**
 	 * get template to show comments and other data
-	 * about user with requested email address
+	 * about user with requested e-mail address
 	 * set variable $controller to use in template
 	 */
 	public function get_template() {
@@ -85,7 +85,7 @@ class Controller_Comments {
 
 	/**
 	 * build table with all comments
-	 * selected by email address
+	 * selected by e-mail address
 	 */
 	public function create_table_with_comments() {
 		$comments = $this->get_all_comments_by_author( $this->email_request );
