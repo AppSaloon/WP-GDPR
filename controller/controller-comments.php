@@ -39,14 +39,20 @@ class Controller_Comments {
 		//remove slash
 		$substring = substr( $_SERVER['REQUEST_URI'], 1 );
 		//decode base64 result is gdpr#example@mail.com
-		$decoded   = base64_decode( $substring );
+		$decoded = base64_decode( $substring );
 		if ( strpos( $decoded, 'gdpr#' ) !== false ) {
 			//explode into array( 'gdpr', 'example@email.com' )
 			//get second element from array
 			$email               = explode( '#', $decoded )[1];
 			$this->email_request = $email;
+			global $wpdb;
 
-			return true;
+			$table_name = $wpdb->prefix . 'gdpr_requests';
+			$time_stamp = base64_decode( explode( '#', $decoded )[2] );
+
+			$query = "SELECT * FROM $table_name WHERE email='$email' AND timestamp='$time_stamp'";
+
+			return ! empty( $wpdb->get_results( $query ) );
 		}
 
 		return false;

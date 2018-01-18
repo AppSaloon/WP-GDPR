@@ -82,7 +82,6 @@ class Controller_Menu_Page {
 		return $data;
 	}
 
-
 	/**
 	 *  create checkbox as delegate of gdpr_form
 	 */
@@ -147,9 +146,17 @@ class Controller_Menu_Page {
 				$single_address = sanitize_email( $single_address );
 				$to             = $single_address;
 				$subject        = 'Data request';
-				$content        = $this->get_email_content( $single_address );
+				//TODO prevent duplicates
+				$request = $this->get_request_gdpr_table_by_email( $single_address );
+
+				if ( ! $request ) {
+					return;
+				}
+
+				$content = $this->get_email_content( $request[0] );
 
 				$this->set_notice();
+
 
 				wp_mail( $to, $subject, $content, array() );
 
@@ -159,14 +166,31 @@ class Controller_Menu_Page {
 	}
 
 	/**
+	 * @return array|null|object
+	 * get all records from gdpr_requests table
+	 */
+	public function get_request_gdpr_table_by_email( $email ) {
+		global $wpdb;
+
+		if ( ! $email = sanitize_email( $email ) ) {
+			return;
+		}
+
+
+		$query = "SELECT * FROM {$wpdb->prefix}gdpr_requests WHERE email='$email' AND status='0'";
+
+		return $wpdb->get_results( $query, ARRAY_A );
+	}
+
+	/**
 	 * @param $single_adress
 	 *
 	 * @return string content of email
 	 *
 	 */
-	public function get_email_content( $single_adress ) {
+	public function get_email_content( $single_request ) {
 		ob_start();
-		$url = $this->create_unique_url( $single_adress );
+		$url = $this->create_unique_url( $single_request );
 		include GDPR_DIR . 'view/front/email-template.php';
 
 		return ob_get_clean();
@@ -179,8 +203,17 @@ class Controller_Menu_Page {
 	 * create url
 	 * encode gdpr#example@email.com into base64
 	 */
-	public function create_unique_url( $email_address ) {
-		return home_url() . '/' . base64_encode( 'gdpr#' . $email_address );
+	public function create_unique_url( $request ) {
+		return home_url() . '/' . base64_encode( 'gdpr#' . $request['email'] . '#' . base64_encode( $request['timestamp'] ) );
+	}
+
+	public function set_notice() {
+		/**
+		 * set notice
+		 */
+		$notice = Gdpr_Container::make( 'wp_gdpr\lib\Appsaloon_Notice' );
+		$notice->set_message( 'Email sent' );
+		$notice->register_notice();
 	}
 
 	public function update_gdpr_request_status( $email ) {
@@ -228,14 +261,5 @@ class Controller_Menu_Page {
 				}
 			}
 		} );
-	}
-
-	public function set_notice() {
-		/**
-		 * set notice
-		 */
-		$notice = Gdpr_Container::make( 'wp_gdpr\lib\Appsaloon_Notice' );
-		$notice->set_message( 'Email sent' );
-		$notice->register_notice();
 	}
 }
