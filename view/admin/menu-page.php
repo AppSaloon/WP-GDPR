@@ -14,6 +14,8 @@ $controller->build_table_with_requests();
 
     <h2>List of plugins that store data of users</h2>
 <?php $controller->build_table_with_plugins(); ?>
+    <h2>List of delete requests</h2>
+	<?php $controller->build_table_with_delete_requests(); ?>
 </div>
 
 
