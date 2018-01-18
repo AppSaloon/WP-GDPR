@@ -56,7 +56,7 @@ class Wp_Gdpr_Core {
 	}
 
 	public function execute_on_plugin_activation() {
-		register_activation_hook( __FILE__, array( 'wp_gdpr\lib\Appsaloon_Customtables', 'create_request_table' ) );
+		register_activation_hook( __FILE__, array( 'wp_gdpr\lib\Appsaloon_Customtables', 'create_custom_tables' ) );
 	}
 
 }
