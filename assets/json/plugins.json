@@ -1,0 +1,22 @@
+{
+  "gravityforms":{
+    "name" : "Gravity Forms",
+    "slug" : "gravityforms",
+    "data_stored_in": "entries"
+  },
+  "woocommerce":{
+    "name" : "Woocommerce",
+    "slug" : "woocommerce",
+    "data_stored_in": "orders"
+  },
+  "contactform7":{
+    "name" : "Contact Form 7 CFDB7",
+    "slug" : "cfdb7",
+    "data_stored_in": "entries, csv"
+  },
+  "eventsmanager":{
+    "name" : "Events manager",
+    "slug" : "wp_events",
+    "data_stored_in": "em_event_form"
+  }
+}
