@@ -50,14 +50,16 @@ class Wp_Gdpr_Core {
 	public function run() {
 		Gdpr_Container::make( 'wp_gdpr\config\Startup_Config' );
 		Gdpr_Container::make( 'wp_gdpr\controller\Controller_Credentials_Request', self::FORM_SHORTCODE_NAME );
-		Gdpr_Container::make( 'wp_gdpr\controller\Controller_Comments');
-		Gdpr_Container::make( 'wp_gdpr\controller\Controller_Form_Submit',  $this->request_form_inputs );
-		Gdpr_Container::make('wp_gdpr\controller\Controller_Menu_Page');
+		Gdpr_Container::make( 'wp_gdpr\controller\Controller_Comments' );
+		Gdpr_Container::make( 'wp_gdpr\controller\Controller_Form_Submit', $this->request_form_inputs );
+		Gdpr_Container::make( 'wp_gdpr\controller\Controller_Menu_Page' );
 	}
 
 	public function execute_on_plugin_activation() {
 		register_activation_hook( __FILE__, array( 'wp_gdpr\lib\Appsaloon_Customtables', 'create_request_table' ) );
 	}
+
 }
+
 
 new Wp_Gdpr_Core();
