@@ -17,7 +17,7 @@ class Gdpr_Container {
 	 * @throws \Exception
 	 * search in registered classes and create object
 	 */
-	public static function make( string $class_name, $arguments = null ) {
+	public static function make(  $class_name, $arguments = null ) {
 		/**
 		 * //TODO add function to create objects when are called
 		 * //TODO do not register objects in array

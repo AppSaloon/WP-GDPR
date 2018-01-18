@@ -33,7 +33,7 @@ class Appsaloon_Shortcode {
 	/**
 	 * add content that should be showd in shortcode
 	 */
-	public function add_content( string $content ) {
+	public function add_content( $content ) {
 		$this->content = $content;
 	}
 

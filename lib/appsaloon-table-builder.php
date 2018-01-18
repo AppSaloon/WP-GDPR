@@ -11,7 +11,13 @@ namespace wp_gdpr\lib;
  */
 class Appsaloon_Table_Builder {
 
+	/**
+	 * @var null|string
+	 */
 	public $custom_classes;
+	/**
+	 * @var array
+	 */
 	public $head;
 	public $data;
 	public $footer;
@@ -19,11 +25,25 @@ class Appsaloon_Table_Builder {
 	/**
 	 * Appsaloon_Table_Builder constructor.
 	 */
-	public function __construct( array $head, array $data, array $footer, string $custom_classes = 'wp-list-table widefat fixed striped' ) {
+	public function __construct( array $head, array $data, array $footer, $custom_classes = null ) {
+		if ( $custom_classes == null ) {
+			$custom_classes = 'wp-list-table widefat fixed striped';
+		}
 		$this->custom_classes = $custom_classes;
 		$this->head           = $head;
 		$this->data           = $data;
 		$this->footer         = $footer;
+	}
+
+	/**
+	 * show table
+	 */
+	public function print_table() {
+		$this->open_table();
+		$this->build_head();
+		$this->build_body();
+		$this->build_footer();
+		$this->close_table();
 	}
 
 	/**
@@ -34,8 +54,8 @@ class Appsaloon_Table_Builder {
 	}
 
 	/**
-     * build head
-     */
+	 * build head
+	 */
 	public function build_head() {
 		if ( empty( $this->head ) ) {
 			return;
@@ -51,7 +71,6 @@ class Appsaloon_Table_Builder {
 		<?php
 	}
 
-
 	/**
 	 * show body
 	 */
@@ -61,7 +80,7 @@ class Appsaloon_Table_Builder {
 		<?php foreach ( $this->data as $rows ) : ?>
             <tr>
 				<?php foreach ( $rows as $single_row ) : ?>
-                    <td><?php  echo $single_row; ?></td>
+                    <td><?php echo $single_row; ?></td>
 				<?php endforeach; ?>
             </tr>
 		<?php endforeach; ?>
@@ -92,16 +111,5 @@ class Appsaloon_Table_Builder {
 	 */
 	public function close_table() {
 		?></table><?php
-	}
-
-	/**
-	 * show table
-	 */
-	public function print_table() {
-        $this->open_table();
-		$this->build_head();
-		$this->build_body();
-		$this->build_footer();
-		$this->close_table();
 	}
 }

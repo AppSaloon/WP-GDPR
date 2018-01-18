@@ -215,7 +215,7 @@ class Controller_Menu_Page {
 	 *
 	 * @return array
 	 */
-	public function filter_plugins( array $plugins ) {
+	public function filter_plugins( $plugins ) {
 
 		return array_filter( $plugins, function ( $data ) {
 			$plugin_name = strtolower( $data[0] );

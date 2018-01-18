@@ -61,4 +61,3 @@ class Wp_Gdpr_Core {
 }
 
 new Wp_Gdpr_Core();
-
