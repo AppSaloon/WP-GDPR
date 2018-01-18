@@ -15,6 +15,7 @@ class Controller_Comments {
 
 	public function __construct() {
 		$this->redirect_template();
+        add_action('wp_enqueue_scripts', array($this, 'loadStyle'), 10);
 	}
 
 	/**
@@ -120,4 +121,8 @@ class Controller_Comments {
 
 		return $comments;
 	}
+
+	public function loadStyle(){
+        wp_enqueue_style('gdpr-main-css', GDPR_URL .'assets/css/main.css');
+    }
 }
