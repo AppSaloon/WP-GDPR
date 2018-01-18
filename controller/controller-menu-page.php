@@ -147,7 +147,7 @@ class Controller_Menu_Page {
 				$to             = $single_address;
 				$subject        = 'Data request';
 				//TODO prevent duplicates
-				$request = $this->get_request_gdpr_table_by_email( $single_address );
+				$request = $this->get_request_gdpr_by_email( $single_address );
 
 				if ( ! $request ) {
 					return;
@@ -169,7 +169,7 @@ class Controller_Menu_Page {
 	 * @return array|null|object
 	 * get all records from gdpr_requests table
 	 */
-	public function get_request_gdpr_table_by_email( $email ) {
+	public function get_request_gdpr_by_email( $email ) {
 		global $wpdb;
 
 		if ( ! $email = sanitize_email( $email ) ) {
@@ -222,6 +222,26 @@ class Controller_Menu_Page {
 		$table_name = $wpdb->prefix . 'gdpr_requests';
 
 		$wpdb->update( $table_name, array( 'status' => 1 ), array( 'email' => $email ) );
+	}
+
+	/**
+	 * search for plugins
+	 */
+	public function build_table_with_delete_requests() {
+
+		global $wpdb;
+
+		$query = "SELECT * FROM {$wpdb->prefix}gdpr_del_requests";
+
+		$requests = $wpdb->get_results( $query, ARRAY_A );
+
+		$table = new Appsaloon_Table_Builder(
+			array( 'id', 'email', 'comments(ID)', 'requested at'),
+			$requests
+			, array() );
+
+		$table->print_table();
+
 	}
 
 	/**
