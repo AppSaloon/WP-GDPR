@@ -2,6 +2,7 @@
 
 namespace wp_gdpr\controller;
 
+use wp_gdpr\lib\Appsaloon_Customtables;
 use wp_gdpr\lib\Gdpr_Container;
 use wp_gdpr\lib\Appsaloon_Table_Builder;
 
@@ -12,10 +13,12 @@ class Controller_Comments {
 	 * this e-mail is used to decode and encode unique url
 	 */
 	public $email_request;
+	public $message;
 
 	public function __construct() {
 		$this->redirect_template();
-        add_action('wp_enqueue_scripts', array($this, 'loadStyle'), 10);
+		add_action( 'wp_enqueue_scripts', array( $this, 'loadStyle' ), 10 );
+		add_action( 'init', array( $this, 'save_delete_request' ) );
 	}
 
 	/**
@@ -89,12 +92,13 @@ class Controller_Comments {
 	 */
 	public function create_table_with_comments() {
 		$comments = $this->get_all_comments_by_author( $this->email_request );
-		$comments = $this->filter_comments( $comments );
+		$comments = $this->map_comments( $comments );
+		$comments = array_map( array( $this, 'add_checkbox' ), $comments );
 
 		$table = new Appsaloon_Table_Builder(
-			array( 'comment date', 'comment content', 'post ID' ),
+			array( 'comment date', 'comment content', 'post ID', 'delete' ),
 			$comments
-			, array(), 'gdpr_comments_table' );
+			, array( $this->get_form_content() ), 'gdpr_comments_table' );
 
 		$table->print_table();
 	}
@@ -114,15 +118,80 @@ class Controller_Comments {
 	 *
 	 * @return array
 	 */
-	public function filter_comments( $comments ) {
+	public function map_comments( $comments ) {
 		$comments = array_map( function ( $data ) {
-			return array( $data->comment_date, $data->comment_content, $data->comment_post_ID );
+			return array(
+				'comment_date'    => $data->comment_date,
+				'comment_content' => $data->comment_content,
+				'comment_post_ID' => $data->comment_post_ID,
+				'comment_ID'      => $data->comment_ID
+			);
 		}, $comments );
 
 		return $comments;
 	}
 
-	public function loadStyle(){
-        wp_enqueue_style('gdpr-main-css', GDPR_URL .'assets/css/main.css');
-    }
+	/**
+	 *
+	 * @return string
+	 */
+	public function get_form_content() {
+		ob_start();
+		$email = $this->email_request;
+		include_once GDPR_DIR . 'view/admin/small-form-delete-request.php';
+
+		return ob_get_clean();
+	}
+
+	public function add_checkbox( $comment ) {
+		$comment['checkbox'] = $this->create_single_input_with_comment_id( $comment['comment_ID'] );
+		unset( $comment['comment_ID'] );
+
+		return $comment;
+	}
+
+	public function create_single_input_with_comment_id( $comment_id ) {
+		return '<input type="checkbox" form="wgdpr_delete_comments_form"  name="gdpr_delete_comments[]" value="' . $comment_id . '">';
+	}
+
+	public function loadStyle() {
+		wp_enqueue_style( 'gdpr-main-css', GDPR_URL . 'assets/css/main.css' );
+	}
+
+	public function save_delete_request() {
+
+		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST["send_gdp_del_request"] ) && isset($_REQUEST['gdpr_delete_comments']) && is_array( $_REQUEST['gdpr_delete_comments'] ) ) {
+			//save in database
+			global $wpdb;
+
+			$comments_ids = array_filter( $_REQUEST['gdpr_delete_comments'], array(
+				$this,
+				'sanitize_comments_input'
+			) );
+
+			$table_name = $wpdb->prefix . Appsaloon_Customtables::DELETE_REQUESTS_TABLE_NAME;
+
+			$wpdb->insert(
+				$table_name,
+				array(
+					'email'     => sanitize_email( $_REQUEST["gdpr_email"] ),
+					'comments'    => serialize( $comments_ids),
+					'timestamp' => current_time( 'mysql' )
+				)
+			);
+			$this->message = '<h3>Administrator received yor request. Thank You.</h3>';
+			//TODO email to admin
+		}
+
+	}
+
+	/**
+	 * @param $comment
+	 * @return bool
+	 *
+	 * check if input value is numeric
+	 */
+	public function sanitize_comments_input( $comment ) {
+		return is_numeric( $comment );
+	}
 }

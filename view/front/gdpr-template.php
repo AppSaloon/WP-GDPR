@@ -1,4 +1,4 @@
-<?php ?>
+<?php echo $controller->message; ?>
 <h3><?php _e('All comments added by e-mail address', 'wp_gdpr'); ?>: <?php echo $controller->email_request; ?></h3>
 <?php
 /**
