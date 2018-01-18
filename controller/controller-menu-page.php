@@ -31,12 +31,12 @@ class Controller_Menu_Page {
 
 		//map status from number to string
 		$requesting_users = array_map( array( $this, 'map_request_status' ), $requesting_users );
-		//add checkbox input in every element with email address
+		//add checkbox input in every element with e-mail address
 		$requesting_users = array_map( array( $this, 'map_checkboxes_send_email' ), $requesting_users );
 
 		//show table object
 		$table = new Appsaloon_Table_Builder(
-			array( 'id', 'email', '', 'requested at', 'status', 'send email' ),
+			array( __('id', 'wp_gdpr'), __('e-mail', 'wp_gdpr'), __('status', 'wp_gdpr'), __('requested at', 'wp_gdpr'), __('resend e-mail', 'wp_gdpr') ),
 			$requesting_users
 			, array( $form_content ) );
 
@@ -101,13 +101,13 @@ class Controller_Menu_Page {
 
 		switch ( $data['status'] ) {
 			case 0:
-				$data['status'] = 'waiting for email';
+				$data['status'] = __('waiting for e-mail', 'wp_gdpr');
 				break;
 			case 1:
-				$data['status'] = 'email sent';
+				$data['status'] = __('e-mail send', 'wp_gdpr');
 				break;
 			case 2:
-				$data['status'] = 'url is visited';
+				$data['status'] = __('url is visited', 'wp_gdpr');
 				break;
 		}
 
@@ -127,7 +127,7 @@ class Controller_Menu_Page {
 		foreach ( $requesting_users as $user ) {
 			/**
 			 * if status is 0
-			 * email is not sent
+			 * e-mail is not send
 			 *
 			 */
 			if ( $user['status'] == 0 ) {
@@ -138,14 +138,14 @@ class Controller_Menu_Page {
 	}
 
 	/**
-	 * send emails when POST request
+	 * send e-mails when POST request
 	 */
 	public function send_email() {
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_emails'] ) && is_array( $_REQUEST['gdpr_emails'] ) ) {
 			foreach ( $_REQUEST['gdpr_emails'] as $single_address ) {
 				$single_address = sanitize_email( $single_address );
 				$to             = $single_address;
-				$subject        = 'Data request';
+				$subject        = __('Data request', 'wp_gdpr');
 				//TODO prevent duplicates
 				$request = $this->get_request_gdpr_by_email( $single_address );
 
@@ -185,7 +185,7 @@ class Controller_Menu_Page {
 	/**
 	 * @param $single_adress
 	 *
-	 * @return string content of email
+	 * @return string content of e-mail
 	 *
 	 */
 	public function get_email_content( $single_request ) {
@@ -212,7 +212,7 @@ class Controller_Menu_Page {
 		 * set notice
 		 */
 		$notice = Gdpr_Container::make( 'wp_gdpr\lib\Appsaloon_Notice' );
-		$notice->set_message( 'Email sent' );
+		$notice->set_message( __('E-mail send', 'wp_gdpr') );
 		$notice->register_notice();
 	}
 
@@ -236,7 +236,7 @@ class Controller_Menu_Page {
 		$requests = $wpdb->get_results( $query, ARRAY_A );
 
 		$table = new Appsaloon_Table_Builder(
-			array( 'id', 'email', 'comments(ID)', 'requested at'),
+			array( __('id', 'wp_gdrp'), __('e-mail', 'wp_gdrp'), __('comments(ID)', 'wp_gdrp'), __('requested at', 'wp_gdrp')),
 			$requests
 			, array() );
 
@@ -258,7 +258,7 @@ class Controller_Menu_Page {
 		$plugins = $this->filter_plugins( $plugins );
 
 		$table = new Appsaloon_Table_Builder(
-			array( 'plugin name' ),
+			array( __('plugin name', 'wp_gdpr') ),
 			$plugins
 			, array() );
 

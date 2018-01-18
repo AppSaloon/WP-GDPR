@@ -1,5 +1,5 @@
 <?php echo $controller->message; ?>
-<h3>All comments added by email address: <?php echo $controller->email_request; ?></h3>
+<h3><?php _e('All comments added by e-mail address', 'wp_gdpr'); ?>: <?php echo $controller->email_request; ?></h3>
 <?php
 /**
  * create table with comments

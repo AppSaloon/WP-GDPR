@@ -12,7 +12,6 @@ This plugin wil create a page where users can request access to their personal d
 The plugin gives you advice on how to be compliant with GDPR and witch actions you need to take in order to be compliant.
 
 
-
 == Description ==
 The plugin gives you advice on how to be compliant with GDPR and witch actions you need to take in order to be compliant.
 It adds a checklist to the backend where you can see what you need to do in order to be compliant and gives you default text that you can add to different forms.
@@ -27,12 +26,17 @@ In the third stage they can view, update and download their personal data or ask
 
 
 == Installation ==
-Upload the plugin files to the /wp-content/plugins, or install the plugin through the WordPress plugins screen directly.
-Activate the plugin through the ‘Plugins’ screen in WordPress
-Go to ‘Tools’ -> ‘WP GDPR’
+1. Upload the plugin files to the /wp-content/plugins, or install the plugin through the WordPress plugins screen directly.
+2. Activate the plugin through the ‘Plugins’ screen in WordPress
+3. ‘WP GDPR’ will be created to view the requests in the backend
+4. The page 'GDPR – Request personal data' will be created. This page displays the form where visitors can submit their request.
 
-== Frequently Asked Questions ==
 
 == Screenshots ==
+1. WP-GDPR backend - overview of requests
+2. WP-GDPR frontend - form where visitors can enter their e-mail and ask to view there personal data
+3. WP-GDPR frontend - form succes message
+
+== Frequently Asked Questions ==
 
 == Changelog ==
