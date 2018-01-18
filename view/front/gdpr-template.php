@@ -1,4 +1,4 @@
-<?php ?>
+<?php echo $controller->message; ?>
 <h3>All comments added by email address: <?php echo $controller->email_request; ?></h3>
 <?php
 /**

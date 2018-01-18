@@ -6,5 +6,5 @@
 ?>
 <form method="post" id="gdpr_form">
     <?php //$controller->print_inputs_with_emails(); ?>
-    <input type="submit" class="button button-primary" name="send_gdp_emails" value="Send emails">
+    <input type="submit" class="button button-primary" name="send_gdp_emails" value="Resend emails">
 </form>
