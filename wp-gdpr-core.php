@@ -14,7 +14,9 @@
  * Plugin Name:       WP GDPR CORE
  * Description:       Help to handle gdpr regulations.
  * Version:           1.0.0
- * Author:            Appsaloon - Sebastian Kurzynowski
+ * Text Domain:       wp_gdpr
+ * Domain Path:       /languages
+ * Author:            Appsaloon - Sebastian Kurzynowski, Mieke Nijs
  * Author URI:        https://www.appsaloon.be
  */
 
