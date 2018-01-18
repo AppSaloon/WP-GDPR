@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP GDPR CORE\n"
-"POT-Creation-Date: 2018-01-18 14:32+0100\n"
-"PO-Revision-Date: 2018-01-18 14:47+0100\n"
+"POT-Creation-Date: 2018-01-18 14:55+0100\n"
+"PO-Revision-Date: 2018-01-18 14:57+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_BE\n"
@@ -24,6 +24,22 @@ msgstr ""
 #: config/startup-config.php:40
 msgid "GDPR - Request personal data"
 msgstr "GDPR - Verzoek voor inzage in persoonlijke data"
+
+#: controller/controller-comments.php:99
+msgid "comment date"
+msgstr "datum van opmerking"
+
+#: controller/controller-comments.php:99
+msgid "comment content"
+msgstr "opmerking inhoud"
+
+#: controller/controller-comments.php:99
+msgid "post ID"
+msgstr "post ID"
+
+#: controller/controller-comments.php:99
+msgid "delete"
+msgstr "verwijderen"
 
 #: controller/controller-menu-page.php:39
 #: controller/controller-menu-page.php:239
@@ -86,6 +102,10 @@ msgstr "Lijst met plugins die persoonlijke data bewaren"
 
 #: view/admin/menu-page.php:17
 msgid "List of delete requests"
+msgstr "Lijst met verzoek tot verwijdering"
+
+#: view/admin/small-form-delete-request.php:9
+msgid "Send delete request"
 msgstr "Lijst met verzoek tot verwijdering"
 
 #: view/admin/small-form.php:9
