@@ -57,6 +57,17 @@ class Controller_Menu_Page {
 	}
 
 	/**
+	 *
+	 * @return string
+	 */
+	public function get_delete_form_content() {
+		ob_start();
+		$controller = $this;
+		include_once GDPR_DIR . 'view/admin/delete-comments-form.php';
+
+		return ob_get_clean();
+	}
+	/**
 	 * @param $requesting_users
 	 *
 	 * @return string
@@ -238,7 +249,7 @@ class Controller_Menu_Page {
 		$table = new Appsaloon_Table_Builder(
 			array( __('id', 'wp_gdrp'), __('e-mail', 'wp_gdrp'), __('comments(ID)', 'wp_gdrp'), __('requested at', 'wp_gdrp')),
 			$requests
-			, array() );
+			, array($this->get_delete_form_content()) );
 
 		$table->print_table();
 
