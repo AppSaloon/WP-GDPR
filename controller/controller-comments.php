@@ -188,7 +188,7 @@ class Controller_Comments {
 					'timestamp' => current_time( 'mysql' )
 				)
 			);
-			$this->message = '<h3>Administrator received yor request. Thank You.</h3>';
+			$this->message = '<h3>'. __("The site administrator received your request. Thank You.","wp_gdpr") .'</h3>';
 			//TODO email to admin
 		}
 
