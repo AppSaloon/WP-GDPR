@@ -17,7 +17,10 @@ class Controller_Comments {
 
 	public function __construct() {
 		$this->redirect_template();
-		add_action( 'wp_enqueue_scripts', array( $this, 'loadStyle' ), 10 );
+        $page_slug = trim( $_SERVER["REQUEST_URI"] , '/' );
+		if (strpos($page_slug, 'gdpr') !== false) {
+            add_action('wp_enqueue_scripts', array($this, 'loadStyle'), 10);
+        }
 		add_action( 'init', array( $this, 'save_delete_request' ) );
 	}
 
