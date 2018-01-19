@@ -96,7 +96,7 @@ class Controller_Comments {
 		$comments = array_map( array( $this, 'add_checkbox' ), $comments );
 
 		$table = new Appsaloon_Table_Builder(
-			array( 'comment date', 'comment content', 'post ID', 'delete' ),
+			array( __('comment date', 'wp_gdpr'), __('comment content', 'wp_gdpr'), __('post ID', 'wp_gdpr'), __('delete', 'wp_gdpr') ),
 			$comments
 			, array( $this->get_form_content() ), 'gdpr_comments_table' );
 
