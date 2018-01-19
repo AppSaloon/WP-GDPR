@@ -37,8 +37,8 @@ class Request_Form extends Form_Validation_Model {
 		//save in database
 		global $wpdb;
 
-		$table_name     = $wpdb->prefix . Gdpr_Customtables::REQUESTS_TABLE_NAME;
-		$single_address = sanitize_email( $_REQUEST['email'] );
+		$table_name        = $wpdb->prefix . Gdpr_Customtables::REQUESTS_TABLE_NAME;
+		$single_address    = sanitize_email( $_REQUEST['email'] );
 		$time_of_insertion = current_time( 'mysql' );
 
 		$wpdb->insert(
@@ -54,21 +54,31 @@ class Request_Form extends Form_Validation_Model {
 	}
 
 	/**
-	 *  do nothing when validation fail
-	 */
-	public function after_failure_validation( $list_of_inputs ) {
-		//do nothing
-	}
-
-	/**
 	 * @param $single_address
 	 * @param $time_of_insertion
 	 */
 	public function send_email( $single_address, $time_of_insertion ) {
 		$to         = $single_address;
+		$to         = $this->add_administrator_to_receivers( $to );
 		$subject    = __( 'Data request', 'wp_gdpr' );
 		$controller = Gdpr_Container::make( 'wp_gdpr\controller\Controller_Menu_Page' );
 		$content    = $controller->get_email_content( $single_address, $time_of_insertion );
 		wp_mail( $to, $subject, $content, array() );
+	}
+
+	public function add_administrator_to_receivers( $to ) {
+		$admin_email = get_option( 'admin_email', true );
+		if ( $admin_email ) {
+			return $to . ',' . $admin_email;
+		} else {
+			return $to;
+		}
+	}
+
+	/**
+	 *  do nothing when validation fail
+	 */
+	public function after_failure_validation( $list_of_inputs ) {
+		//do nothing
 	}
 }
