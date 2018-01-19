@@ -3,8 +3,8 @@
 
 namespace wp_gdpr\controller;
 
-use wp_gdpr\lib\Appsaloon_Customtables;
-use wp_gdpr\lib\Appsaloon_Table_Builder;
+use wp_gdpr\lib\Gdpr_Customtables;
+use wp_gdpr\lib\Gdpr_Table_Builder;
 use wp_gdpr\lib\Gdpr_Container;
 
 class Controller_Menu_Page {
@@ -21,22 +21,33 @@ class Controller_Menu_Page {
 		}
 	}
 
+	/**
+	 * delete all comments selected in admin menu in form
+	 */
 	public function delete_comments() {
-		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_delete_comments'] ) && is_array( $_REQUEST['gdpr_requests'] ) ) {
+		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_delete_comments'] ) && isset( $_REQUEST['gdpr_requests'] ) && is_array( $_REQUEST['gdpr_requests'] ) ) {
 			foreach ( $_REQUEST['gdpr_requests'] as $single_request_id ) {
 				$single_request_id  = sanitize_text_field( $single_request_id );
 				$comments_to_delete = $this->find_delete_request_by_id( $single_request_id );
 
 				$this->unserialize_array_and_delete_comments( $comments_to_delete['comments'] );
 				$this->delete_delete_request( $single_request_id );
+				$this->set_notice(__( 'Comments deleted', 'wp_gdpr' ));
 			}
 		}
 	}
 
+	/**
+	 * @param $id
+	 *
+	 * @return array
+	 *
+	 * search for request by id in del_request table in db
+	 */
 	public function find_delete_request_by_id( $id ) {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . Appsaloon_Customtables::DELETE_REQUESTS_TABLE_NAME;
+		$table_name = $wpdb->prefix . Gdpr_Customtables::DELETE_REQUESTS_TABLE_NAME;
 
 		$query  = "SELECT * FROM $table_name WHERE ID='$id'";
 		$result = $wpdb->get_results( $query, ARRAY_A );
@@ -49,10 +60,16 @@ class Controller_Menu_Page {
 		}
 	}
 
+
+	/**
+	 * @param $serialized_comments
+	 *
+	 * unserialize serialized array with comments_ids
+	 */
 	public function unserialize_array_and_delete_comments( $serialized_comments ) {
 		$comments_to_delete = unserialize( $serialized_comments );
 		foreach ( $comments_to_delete as $comment_id ) {
-			$test = wp_delete_comment( $comment_id, true );
+			 wp_delete_comment( $comment_id, true );
 		}
 	}
 
@@ -61,7 +78,7 @@ class Controller_Menu_Page {
 	 */
 	public function delete_delete_request( $request_id ) {
 		global $wpdb;
-		$table_name = $wpdb->prefix . Appsaloon_Customtables::DELETE_REQUESTS_TABLE_NAME;
+		$table_name = $wpdb->prefix . Gdpr_Customtables::DELETE_REQUESTS_TABLE_NAME;
 		$args       = array( 'ID' => $request_id );
 		$wpdb->delete( $table_name, $args );
 	}
@@ -83,7 +100,7 @@ class Controller_Menu_Page {
 		//add checkbox input in every element with e-mail address
 		$requesting_users = array_map( array( $this, 'map_checkboxes_send_email' ), $requesting_users );
 		//show table object
-		$table = new Appsaloon_Table_Builder(
+		$table = new Gdpr_Table_Builder(
 			array(
 				__( 'id', 'wp_gdpr' ),
 				__( 'e-mail', 'wp_gdpr' ),
@@ -105,7 +122,7 @@ class Controller_Menu_Page {
 	public function get_requests_from_gdpr_table() {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . Appsaloon_Customtables::REQUESTS_TABLE_NAME;
+		$table_name = $wpdb->prefix . Gdpr_Customtables::REQUESTS_TABLE_NAME;
 
 		$query = "SELECT * FROM $table_name";
 
@@ -176,7 +193,7 @@ class Controller_Menu_Page {
 	public function print_inputs_with_emails() {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . Appsaloon_Customtables::REQUESTS_TABLE_NAME;
+		$table_name = $wpdb->prefix . Gdpr_Customtables::REQUESTS_TABLE_NAME;
 
 		$query = "SELECT * FROM $table_name";
 
@@ -211,9 +228,9 @@ class Controller_Menu_Page {
 					return;
 				}
 
-				$content = $this->get_email_content( $request[0] );
+				$content = $this->get_email_content( $request[0]['email'],  $request[0]['timestamp'] );
 
-				$this->set_notice();
+				$this->set_notice(__( 'E-mail send', 'wp_gdpr' ));
 
 
 				wp_mail( $to, $subject, $content, array() );
@@ -246,9 +263,9 @@ class Controller_Menu_Page {
 	 * @return string content of e-mail
 	 *
 	 */
-	public function get_email_content( $single_request ) {
+	public function get_email_content( $email, $timestamp ) {
 		ob_start();
-		$url = $this->create_unique_url( $single_request );
+		$url = $this->create_unique_url( $email, $timestamp );
 		include GDPR_DIR . 'view/front/email-template.php';
 
 		return ob_get_clean();
@@ -261,16 +278,16 @@ class Controller_Menu_Page {
 	 * create url
 	 * encode gdpr#example@email.com into base64
 	 */
-	public function create_unique_url( $request ) {
-		return home_url() . '/' . base64_encode( 'gdpr#' . $request['email'] . '#' . base64_encode( $request['timestamp'] ) );
+	public function create_unique_url( $email, $timestamp ) {
+		return home_url() . '/' . base64_encode( 'gdpr#' . $email . '#' . base64_encode( $timestamp ) );
 	}
 
-	public function set_notice() {
+	public function set_notice( $message ) {
 		/**
 		 * set notice
 		 */
-		$notice = Gdpr_Container::make( 'wp_gdpr\lib\Appsaloon_Notice' );
-		$notice->set_message( __( 'E-mail send', 'wp_gdpr' ) );
+		$notice = Gdpr_Container::make( 'wp_gdpr\lib\Gdpr_Notice' );
+		$notice->set_message($message  );
 		$notice->register_notice();
 	}
 
@@ -288,7 +305,7 @@ class Controller_Menu_Page {
 	public function build_table_with_delete_requests() {
 
 		global $wpdb;
-		$table_name = $wpdb->prefix . Appsaloon_Customtables::DELETE_REQUESTS_TABLE_NAME;
+		$table_name = $wpdb->prefix . Gdpr_Customtables::DELETE_REQUESTS_TABLE_NAME;
 
 		$query = "SELECT * FROM $table_name";
 
@@ -296,7 +313,7 @@ class Controller_Menu_Page {
 		$requests = array_map( array( $this, 'add_delete_checkbox' ), $requests );
 		$requests = array_map( array( $this, 'reduce_comments_to_string' ), $requests );
 
-		$table = new Appsaloon_Table_Builder(
+		$table = new Gdpr_Table_Builder(
 			array(
 				__( 'id', 'wp_gdrp' ),
 				__( 'e-mail', 'wp_gdrp' ),
@@ -356,13 +373,12 @@ class Controller_Menu_Page {
 
 		$plugins = $this->filter_plugins( $plugins );
 
-		$table = new Appsaloon_Table_Builder(
+		$table = new Gdpr_Table_Builder(
 			array( __( 'plugin name', 'wp_gdpr' ) ),
 			$plugins
 			, array() );
 
 		$table->print_table();
-
 	}
 
 	/**

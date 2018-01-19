@@ -2,9 +2,9 @@
 
 namespace wp_gdpr\controller;
 
-use wp_gdpr\lib\Appsaloon_Customtables;
+use wp_gdpr\lib\Gdpr_Customtables;
 use wp_gdpr\lib\Gdpr_Container;
-use wp_gdpr\lib\Appsaloon_Table_Builder;
+use wp_gdpr\lib\Gdpr_Table_Builder;
 
 class Controller_Comments {
 
@@ -98,7 +98,7 @@ class Controller_Comments {
 		$comments = $this->map_comments( $comments );
 		$comments = array_map( array( $this, 'add_checkbox' ), $comments );
 
-		$table = new Appsaloon_Table_Builder(
+		$table = new Gdpr_Table_Builder(
 			array( __('comment date', 'wp_gdpr'), __('comment content', 'wp_gdpr'), __('post ID', 'wp_gdpr'), __('delete', 'wp_gdpr') ),
 			$comments
 			, array( $this->get_form_content() ), 'gdpr_comments_table' );
@@ -172,7 +172,7 @@ class Controller_Comments {
 				'sanitize_comments_input'
 			) );
 
-			$table_name = $wpdb->prefix . Appsaloon_Customtables::DELETE_REQUESTS_TABLE_NAME;
+			$table_name = $wpdb->prefix . Gdpr_Customtables::DELETE_REQUESTS_TABLE_NAME;
 
 			$wpdb->insert(
 				$table_name,

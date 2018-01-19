@@ -9,7 +9,7 @@ namespace wp_gdpr\lib;
  *
  * allows to build simple table
  */
-class Appsaloon_Table_Builder {
+class Gdpr_Table_Builder {
 
 	/**
 	 * @var null|string

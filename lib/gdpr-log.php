@@ -2,7 +2,7 @@
 namespace wp_gdpr\lib;
 
 if ( ! class_exists( 'Log' ) ) {
-	class Appsaloon_Log {
+	class Gdpr_Log {
 
 		/**
 		 * Session KEY for log

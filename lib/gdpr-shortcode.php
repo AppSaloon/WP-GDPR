@@ -2,7 +2,7 @@
 
 namespace wp_gdpr\lib;
 
-class Appsaloon_Shortcode {
+class Gdpr_Shortcode {
 	/**
 	 * shortcode arguments
 	 */
