@@ -21,6 +21,15 @@
             line-height: 1.4;
             margin: 0 0 30pt;
         }
+        h3{
+            color: #31708f;
+            background-color: #d9edf7;
+            border-color: #bce8f1;
+            padding: 15px;
+            font-family: sans-serif;
+            font-weight: 400;
+            box-shadow: 0px 2px 10px #31708f;
+        }
         p, th, td {
             font-family: sans-serif;
             font-size: 14px;
