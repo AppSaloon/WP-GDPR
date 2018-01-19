@@ -101,6 +101,13 @@ class Appsaloon_Table_Builder {
 			<?php foreach ( $this->footer as $footer ) : ?>
                 <td><?php echo $footer; ?></td>
 			<?php endforeach; ?>
+            <?php
+            $total_th = count($this->head);
+            $total_td = $total_th - count($this->footer);
+            for($i=0; $i<$total_td; $i++){ ?>
+                <td> </td>
+            <?php }
+            ?>
         </tr>
         </tfoot>
 		<?php
