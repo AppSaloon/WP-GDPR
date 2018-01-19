@@ -21,6 +21,9 @@ class Controller_Menu_Page {
 		}
 	}
 
+	/**
+	 * delete all comments selected in admin menu in form
+	 */
 	public function delete_comments() {
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_delete_comments'] ) && is_array( $_REQUEST['gdpr_requests'] ) ) {
 			foreach ( $_REQUEST['gdpr_requests'] as $single_request_id ) {
@@ -33,6 +36,13 @@ class Controller_Menu_Page {
 		}
 	}
 
+	/**
+	 * @param $id
+	 *
+	 * @return array
+	 *
+	 * search for request by id in del_request table in db
+	 */
 	public function find_delete_request_by_id( $id ) {
 		global $wpdb;
 
@@ -49,10 +59,16 @@ class Controller_Menu_Page {
 		}
 	}
 
+
+	/**
+	 * @param $serialized_comments
+	 *
+	 * unserialize serialized array with comments_ids
+	 */
 	public function unserialize_array_and_delete_comments( $serialized_comments ) {
 		$comments_to_delete = unserialize( $serialized_comments );
 		foreach ( $comments_to_delete as $comment_id ) {
-			$test = wp_delete_comment( $comment_id, true );
+			 wp_delete_comment( $comment_id, true );
 		}
 	}
 
@@ -211,7 +227,7 @@ class Controller_Menu_Page {
 					return;
 				}
 
-				$content = $this->get_email_content( $request[0] );
+				$content = $this->get_email_content( $request[0]['email'],  $request[0]['timestamp'] );
 
 				$this->set_notice();
 
@@ -246,9 +262,9 @@ class Controller_Menu_Page {
 	 * @return string content of e-mail
 	 *
 	 */
-	public function get_email_content( $single_request ) {
+	public function get_email_content( $email, $timestamp ) {
 		ob_start();
-		$url = $this->create_unique_url( $single_request );
+		$url = $this->create_unique_url( $email, $timestamp );
 		include GDPR_DIR . 'view/front/email-template.php';
 
 		return ob_get_clean();
@@ -261,8 +277,8 @@ class Controller_Menu_Page {
 	 * create url
 	 * encode gdpr#example@email.com into base64
 	 */
-	public function create_unique_url( $request ) {
-		return home_url() . '/' . base64_encode( 'gdpr#' . $request['email'] . '#' . base64_encode( $request['timestamp'] ) );
+	public function create_unique_url( $email, $timestamp ) {
+		return home_url() . '/' . base64_encode( 'gdpr#' . $email . '#' . base64_encode( $timestamp ) );
 	}
 
 	public function set_notice() {
@@ -362,7 +378,6 @@ class Controller_Menu_Page {
 			, array() );
 
 		$table->print_table();
-
 	}
 
 	/**

@@ -3,6 +3,7 @@
 namespace wp_gdpr\model;
 
 use wp_gdpr\lib\Appsaloon_Customtables;
+use wp_gdpr\lib\Gdpr_Container;
 
 class Request_Form extends Form_Validation_Model {
 
@@ -36,16 +37,20 @@ class Request_Form extends Form_Validation_Model {
 		//save in database
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . Appsaloon_Customtables::REQUESTS_TABLE_NAME;
+		$table_name     = $wpdb->prefix . Appsaloon_Customtables::REQUESTS_TABLE_NAME;
+		$single_address = sanitize_email( $_REQUEST['email'] );
+		$time_of_insertion = current_time( 'mysql' );
 
 		$wpdb->insert(
 			$table_name,
 			array(
-				'email'     => $_REQUEST['email'],
-				'status'     => 0,
-				'timestamp' => current_time( 'mysql' )
+				'email'     => $single_address,
+				'status'    => 1,
+				'timestamp' => $time_of_insertion
 			)
 		);
+
+		$this->send_email( $single_address, $time_of_insertion );
 	}
 
 	/**
@@ -53,5 +58,17 @@ class Request_Form extends Form_Validation_Model {
 	 */
 	public function after_failure_validation( $list_of_inputs ) {
 		//do nothing
+	}
+
+	/**
+	 * @param $single_address
+	 * @param $time_of_insertion
+	 */
+	public function send_email( $single_address, $time_of_insertion ) {
+		$to         = $single_address;
+		$subject    = __( 'Data request', 'wp_gdpr' );
+		$controller = Gdpr_Container::make( 'wp_gdpr\controller\Controller_Menu_Page' );
+		$content    = $controller->get_email_content( $single_address, $time_of_insertion );
+		wp_mail( $to, $subject, $content, array() );
 	}
 }
