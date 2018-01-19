@@ -32,7 +32,7 @@ class Controller_Menu_Page {
 
 				$this->unserialize_array_and_delete_comments( $comments_to_delete['comments'] );
 				$this->delete_delete_request( $single_request_id );
-				$this->set_notice(__( 'Comments deleted', 'wp_gdpr' ));
+				$this->set_notice( __( 'Comments deleted', 'wp_gdpr' ) );
 			}
 		}
 	}
@@ -69,7 +69,7 @@ class Controller_Menu_Page {
 	public function unserialize_array_and_delete_comments( $serialized_comments ) {
 		$comments_to_delete = unserialize( $serialized_comments );
 		foreach ( $comments_to_delete as $comment_id ) {
-			 wp_delete_comment( $comment_id, true );
+			wp_delete_comment( $comment_id, true );
 		}
 	}
 
@@ -81,6 +81,15 @@ class Controller_Menu_Page {
 		$table_name = $wpdb->prefix . Gdpr_Customtables::DELETE_REQUESTS_TABLE_NAME;
 		$args       = array( 'ID' => $request_id );
 		$wpdb->delete( $table_name, $args );
+	}
+
+	public function set_notice( $message ) {
+		/**
+		 * set notice
+		 */
+		$notice = Gdpr_Container::make( 'wp_gdpr\lib\Gdpr_Notice' );
+		$notice->set_message( $message );
+		$notice->register_notice();
 	}
 
 	/**
@@ -220,23 +229,31 @@ class Controller_Menu_Page {
 			foreach ( $_REQUEST['gdpr_emails'] as $single_address ) {
 				$single_address = sanitize_email( $single_address );
 				$to             = $single_address;
+				$to             = $this->add_administrator_to_receivers( $to );
 				$subject        = __( 'Data request', 'wp_gdpr' );
-				//TODO prevent duplicates
 				$request = $this->get_request_gdpr_by_email( $single_address );
 
 				if ( ! $request ) {
 					return;
 				}
 
-				$content = $this->get_email_content( $request[0]['email'],  $request[0]['timestamp'] );
+				$content = $this->get_email_content( $request[0]['email'], $request[0]['timestamp'] );
 
-				$this->set_notice(__( 'E-mail send', 'wp_gdpr' ));
-
+				$this->set_notice( __( 'E-mail send', 'wp_gdpr' ) );
 
 				wp_mail( $to, $subject, $content, array() );
 
 				$this->update_gdpr_request_status( $single_address );
 			}
+		}
+	}
+
+	public function add_administrator_to_receivers( $to ) {
+		$admin_email = get_option( 'admin_email', true );
+		if ( $admin_email ) {
+			return $to . ',' . $admin_email;
+		} else {
+			return $to;
 		}
 	}
 
@@ -252,7 +269,7 @@ class Controller_Menu_Page {
 		}
 
 
-		$query = "SELECT * FROM {$wpdb->prefix}gdpr_requests WHERE email='$email' AND status='0'";
+		$query = "SELECT * FROM {$wpdb->prefix}gdpr_requests WHERE email='$email'";
 
 		return $wpdb->get_results( $query, ARRAY_A );
 	}
@@ -280,15 +297,6 @@ class Controller_Menu_Page {
 	 */
 	public function create_unique_url( $email, $timestamp ) {
 		return home_url() . '/' . base64_encode( 'gdpr#' . $email . '#' . base64_encode( $timestamp ) );
-	}
-
-	public function set_notice( $message ) {
-		/**
-		 * set notice
-		 */
-		$notice = Gdpr_Container::make( 'wp_gdpr\lib\Gdpr_Notice' );
-		$notice->set_message($message  );
-		$notice->register_notice();
 	}
 
 	public function update_gdpr_request_status( $email ) {
