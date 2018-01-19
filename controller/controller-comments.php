@@ -17,10 +17,10 @@ class Controller_Comments {
 
 	public function __construct() {
 		$this->redirect_template();
-        $page_slug = trim( $_SERVER["REQUEST_URI"] , '/' );
-		if (strpos($page_slug, 'gdpr') !== false) {
-            add_action('wp_enqueue_scripts', array($this, 'loadStyle'), 10);
-        }
+		$page_slug = trim( $_SERVER["REQUEST_URI"], '/' );
+		if ( strpos( $page_slug, 'gdpr' ) !== false ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'loadStyle' ), 10 );
+		}
 		add_action( 'init', array( $this, 'save_delete_request' ) );
 	}
 
@@ -99,7 +99,12 @@ class Controller_Comments {
 		$comments = array_map( array( $this, 'add_checkbox' ), $comments );
 
 		$table = new Gdpr_Table_Builder(
-			array( __('comment date', 'wp_gdpr'), __('comment content', 'wp_gdpr'), __('post ID', 'wp_gdpr'), __('delete', 'wp_gdpr') ),
+			array(
+				__( 'comment date', 'wp_gdpr' ),
+				__( 'comment content', 'wp_gdpr' ),
+				__( 'post ID', 'wp_gdpr' ),
+				__( 'delete', 'wp_gdpr' )
+			),
 			$comments
 			, array( $this->get_form_content() ), 'gdpr_comments_table' );
 
@@ -163,7 +168,7 @@ class Controller_Comments {
 
 	public function save_delete_request() {
 
-		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST["send_gdp_del_request"] ) && isset($_REQUEST['gdpr_delete_comments']) && is_array( $_REQUEST['gdpr_delete_comments'] ) ) {
+		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST["send_gdp_del_request"] ) && isset( $_REQUEST['gdpr_delete_comments'] ) && is_array( $_REQUEST['gdpr_delete_comments'] ) ) {
 			//save in database
 			global $wpdb;
 
@@ -178,7 +183,8 @@ class Controller_Comments {
 				$table_name,
 				array(
 					'email'     => sanitize_email( $_REQUEST["gdpr_email"] ),
-					'comments'    => serialize( $comments_ids),
+					'comments'  => serialize( $comments_ids ),
+					'status'    => 0,
 					'timestamp' => current_time( 'mysql' )
 				)
 			);
@@ -190,6 +196,7 @@ class Controller_Comments {
 
 	/**
 	 * @param $comment
+	 *
 	 * @return bool
 	 *
 	 * check if input value is numeric

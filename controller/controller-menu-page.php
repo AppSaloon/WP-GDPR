@@ -31,8 +31,12 @@ class Controller_Menu_Page {
 				$comments_to_delete = $this->find_delete_request_by_id( $single_request_id );
 
 				$this->unserialize_array_and_delete_comments( $comments_to_delete['comments'] );
-				$this->delete_delete_request( $single_request_id );
+				$this->update_status_delete_request( $single_request_id, 1 );
 				$this->set_notice( __( 'Comments deleted', 'wp_gdpr' ) );
+				$to      = $comments_to_delete['email'];
+				$subject = __( 'We confirm Your comments deletion request', 'wp_gdpr' );
+				$content = $this->get_confirmation_email_content( $comments_to_delete );
+				wp_mail( $to, $subject, $content );
 			}
 		}
 	}
@@ -60,7 +64,6 @@ class Controller_Menu_Page {
 		}
 	}
 
-
 	/**
 	 * @param $serialized_comments
 	 *
@@ -76,11 +79,12 @@ class Controller_Menu_Page {
 	/**
 	 * delete row by id from table with delete_requests
 	 */
-	public function delete_delete_request( $request_id ) {
+	public function update_status_delete_request( $request_id, $status ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . Gdpr_Customtables::DELETE_REQUESTS_TABLE_NAME;
-		$args       = array( 'ID' => $request_id );
-		$wpdb->delete( $table_name, $args );
+		$where      = array( 'ID' => $request_id );
+		$data       = array( 'status' => $status );
+		$wpdb->update( $table_name, $data, $where );
 	}
 
 	public function set_notice( $message ) {
@@ -90,6 +94,14 @@ class Controller_Menu_Page {
 		$notice = Gdpr_Container::make( 'wp_gdpr\lib\Gdpr_Notice' );
 		$notice->set_message( $message );
 		$notice->register_notice();
+	}
+
+	public function get_confirmation_email_content( $comment_to_delete ) {
+		ob_start();
+		$date_of_request = $comment_to_delete['timestampt'];
+		include_once GDPR_DIR . 'view/admin/email-confirmation-content.php';
+
+		return ob_get_clean();
 	}
 
 	/**
@@ -231,7 +243,7 @@ class Controller_Menu_Page {
 				$to             = $single_address;
 				$to             = $this->add_administrator_to_receivers( $to );
 				$subject        = __( 'Data request', 'wp_gdpr' );
-				$request = $this->get_request_gdpr_by_email( $single_address );
+				$request        = $this->get_request_gdpr_by_email( $single_address );
 
 				if ( ! $request ) {
 					return;
@@ -320,6 +332,7 @@ class Controller_Menu_Page {
 		$requests = $wpdb->get_results( $query, ARRAY_A );
 		$requests = array_map( array( $this, 'add_delete_checkbox' ), $requests );
 		$requests = array_map( array( $this, 'reduce_comments_to_string' ), $requests );
+		$requests = array_map( array( $this, 'map_status' ), $requests );
 
 		$table = new Gdpr_Table_Builder(
 			array(
@@ -327,6 +340,7 @@ class Controller_Menu_Page {
 				__( 'e-mail', 'wp_gdrp' ),
 				__( 'comments(ID)', 'wp_gdrp' ),
 				__( 'requested at', 'wp_gdrp' ),
+				__( 'status', 'wp_gdrp' ),
 				__( 'delete', 'wp_gdrp' )
 			),
 			$requests
@@ -348,8 +362,25 @@ class Controller_Menu_Page {
 		return ob_get_clean();
 	}
 
+	public function map_status( $request ) {
+		switch ( $request['status'] ) {
+			case 0:
+				$request['status'] = __( 'waiting to delete', 'wp_gdpr' );
+				break;
+			case 1:
+				$request['status'] = __( 'deleted', 'wp_gdpr' );
+				break;
+		}
+
+		return $request;
+	}
+
 	public function add_delete_checkbox( $request ) {
-		$request['checkbox'] = $this->create_checkbox_for_single_delete_row( $request['ID'] );
+		if ( '0' === $request['status'] ) {
+			$request['checkbox'] = $this->create_checkbox_for_single_delete_row( $request['ID'] );
+		} else {
+			$request['checkbox'] = __( 'deleted', 'wp_gdpr' );
+		}
 
 		return $request;
 	}
