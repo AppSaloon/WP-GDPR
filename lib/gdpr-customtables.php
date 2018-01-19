@@ -1,7 +1,7 @@
 <?php
 namespace wp_gdpr\lib;
 
-class Appsaloon_Customtables {
+class Gdpr_Customtables {
 
 	/**
 	 * name of table without prefix

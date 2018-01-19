@@ -2,7 +2,7 @@
 
 namespace wp_gdpr\model;
 
-use wp_gdpr\lib\Appsaloon_Customtables;
+use wp_gdpr\lib\Gdpr_Customtables;
 use wp_gdpr\lib\Gdpr_Container;
 
 class Request_Form extends Form_Validation_Model {
@@ -37,7 +37,7 @@ class Request_Form extends Form_Validation_Model {
 		//save in database
 		global $wpdb;
 
-		$table_name     = $wpdb->prefix . Appsaloon_Customtables::REQUESTS_TABLE_NAME;
+		$table_name     = $wpdb->prefix . Gdpr_Customtables::REQUESTS_TABLE_NAME;
 		$single_address = sanitize_email( $_REQUEST['email'] );
 		$time_of_insertion = current_time( 'mysql' );
 

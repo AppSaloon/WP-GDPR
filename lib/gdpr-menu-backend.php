@@ -5,7 +5,7 @@ namespace wp_gdpr\lib;
 /**
  * lib element to add menu page
  */
-class Appsaloon_Menu_Backend {
+class Gdpr_Menu_Backend {
 	const MENU_PAGE_TITLE = 'WP GDPR';
 
 	const PAGE_SLUG = 'page_slug';

@@ -3,7 +3,7 @@
 /**
  * This class does include classes with namespaces as a file
  */
-class Appsaloon_Autoloader {
+class Gdpr_Autoloader {
 
 	const NAMESPACE_NAME = 'wp_gdpr\\';
 
@@ -34,4 +34,4 @@ class Appsaloon_Autoloader {
 	}
 }
 
-new Appsaloon_Autoloader();
+new Gdpr_Autoloader();

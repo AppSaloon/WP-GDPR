@@ -18,7 +18,7 @@ class Controller_Credentials_Request {
 	 * @param $name
 	 */
 	public function add_form_shortcode( $name ) {
-		$shortcode = Gdpr_Container::make( 'wp_gdpr\lib\Appsaloon_Shortcode', array( 'name' => $name ) );
+		$shortcode = Gdpr_Container::make( 'wp_gdpr\lib\Gdpr_Shortcode', array( 'name' => $name ) );
 		$shortcode->add_content( $this->get_form_html() );
 		$shortcode->register_shortcode();
 	}

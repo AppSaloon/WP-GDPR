@@ -5,7 +5,7 @@ namespace  wp_gdpr\lib;
 /**
  * register notice
  */
-class Appsaloon_Notice {
+class Gdpr_Notice {
 	/**
 	 * message of notice
 	 */

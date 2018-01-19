@@ -16,14 +16,14 @@ class Startup_Config {
 	 * add Logging when shutdown script
 	 */
 	public function execute_on_script_shutdown() {
-		if ( ! has_action( 'shutdown', array( 'wp_gdpr\lib\Appsaloon_Log', 'log_to_database' ) ) ) {
+		if ( ! has_action( 'shutdown', array( 'wp_gdpr\lib\Gdpr_Log', 'log_to_database' ) ) ) {
 
-			add_action( 'shutdown', array( 'wp_gdpr\lib\Appsaloon_Log', 'log_to_database' ) );
+			add_action( 'shutdown', array( 'wp_gdpr\lib\Gdpr_Log', 'log_to_database' ) );
 		}
 	}
 
 	public function basic_config() {
-		Gdpr_Container::make( 'wp_gdpr\lib\Appsaloon_Menu_Backend' );
+		Gdpr_Container::make( 'wp_gdpr\lib\Gdpr_Menu_Backend' );
 
 		$this->create_page();
 	}
