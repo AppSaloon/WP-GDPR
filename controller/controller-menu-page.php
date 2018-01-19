@@ -16,6 +16,54 @@ class Controller_Menu_Page {
 		if ( ! has_action( 'init', array( $this, 'send_email' ) ) ) {
 			add_action( 'init', array( $this, 'send_email' ) );
 		}
+		if ( ! has_action( 'init', array( $this, 'delete_comments' ) ) ) {
+			add_action( 'init', array( $this, 'delete_comments' ) );
+		}
+	}
+
+	public function delete_comments() {
+		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_delete_comments'] ) && is_array( $_REQUEST['gdpr_requests'] ) ) {
+			foreach ( $_REQUEST['gdpr_requests'] as $single_request_id ) {
+				$single_request_id  = sanitize_text_field( $single_request_id );
+				$comments_to_delete = $this->find_delete_request_by_id( $single_request_id );
+
+				$this->unserialize_array_and_delete_comments( $comments_to_delete['comments'] );
+				$this->delete_delete_request( $single_request_id );
+			}
+		}
+	}
+
+	public function find_delete_request_by_id( $id ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . Appsaloon_Customtables::DELETE_REQUESTS_TABLE_NAME;
+
+		$query  = "SELECT * FROM $table_name WHERE ID='$id'";
+		$result = $wpdb->get_results( $query, ARRAY_A );
+
+		//check if record with this id exists in database
+		if ( isset( $result[0] ) ) {
+			return $result[0];
+		} else {
+			return array();
+		}
+	}
+
+	public function unserialize_array_and_delete_comments( $serialized_comments ) {
+		$comments_to_delete = unserialize( $serialized_comments );
+		foreach ( $comments_to_delete as $comment_id ) {
+			$test = wp_delete_comment( $comment_id, true );
+		}
+	}
+
+	/**
+	 * delete row by id from table with delete_requests
+	 */
+	public function delete_delete_request( $request_id ) {
+		global $wpdb;
+		$table_name = $wpdb->prefix . Appsaloon_Customtables::DELETE_REQUESTS_TABLE_NAME;
+		$args       = array( 'ID' => $request_id );
+		$wpdb->delete( $table_name, $args );
 	}
 
 	/**
@@ -128,7 +176,9 @@ class Controller_Menu_Page {
 	public function print_inputs_with_emails() {
 		global $wpdb;
 
-		$query = "SELECT * FROM {$wpdb->prefix}gdpr_requests";
+		$table_name = $wpdb->prefix . Appsaloon_Customtables::REQUESTS_TABLE_NAME;
+
+		$query = "SELECT * FROM $table_name";
 
 		$requesting_users = $wpdb->get_results( $query, ARRAY_A );
 
@@ -280,7 +330,7 @@ class Controller_Menu_Page {
 	}
 
 	public function create_checkbox_for_single_delete_row( $id ) {
-		return '<input type="checkbox" form="gdpr_form"  name="gdpr_emails[]" value="' . $id . '">';
+		return '<input type="checkbox" form="gdpr_admin_del_comments_form"  name="gdpr_requests[]" value="' . $id . '">';
 	}
 
 	public function reduce_comments_to_string( $item ) {
