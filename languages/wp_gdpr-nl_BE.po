@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP GDPR CORE\n"
-"POT-Creation-Date: 2018-01-18 14:55+0100\n"
-"PO-Revision-Date: 2018-01-18 14:57+0100\n"
+"POT-Creation-Date: 2018-01-19 15:06+0100\n"
+"PO-Revision-Date: 2018-01-19 15:12+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_BE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.5\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
@@ -25,72 +25,85 @@ msgstr ""
 msgid "GDPR - Request personal data"
 msgstr "GDPR - Verzoek voor inzage in persoonlijke data"
 
-#: controller/controller-comments.php:99
+#: controller/controller-comments.php:102
 msgid "comment date"
-msgstr "datum van opmerking"
+msgstr "reactie datum"
 
-#: controller/controller-comments.php:99
+#: controller/controller-comments.php:102
 msgid "comment content"
-msgstr "opmerking inhoud"
+msgstr "reactie inhoud"
 
-#: controller/controller-comments.php:99
+#: controller/controller-comments.php:102
 msgid "post ID"
 msgstr "post ID"
 
-#: controller/controller-comments.php:99
+#: controller/controller-comments.php:102
+#: controller/controller-menu-page.php:330
 msgid "delete"
 msgstr "verwijderen"
 
-#: controller/controller-menu-page.php:39
-#: controller/controller-menu-page.php:239
+#: controller/controller-comments.php:185
+msgid "The site administrator received your request. Thank You."
+msgstr "De sitebeheerder heeft je aanvraag goed ontvangen."
+
+#: controller/controller-menu-page.php:35
+msgid "Comments deleted"
+msgstr "Reactie verwijderd"
+
+#: controller/controller-menu-page.php:114
+#: controller/controller-menu-page.php:326
 msgid "id"
 msgstr "id"
 
-#: controller/controller-menu-page.php:39
-#: controller/controller-menu-page.php:239
+#: controller/controller-menu-page.php:115
+#: controller/controller-menu-page.php:327
 msgid "e-mail"
 msgstr "e-mail"
 
-#: controller/controller-menu-page.php:39
-msgid "status"
-msgstr "status"
-
-#: controller/controller-menu-page.php:39
-#: controller/controller-menu-page.php:239
+#: controller/controller-menu-page.php:116
+#: controller/controller-menu-page.php:329
 msgid "requested at"
 msgstr "verzoek gevraagd op"
 
-#: controller/controller-menu-page.php:39
+#: controller/controller-menu-page.php:117
+msgid "status"
+msgstr "status"
+
+#: controller/controller-menu-page.php:118
 msgid "resend e-mail"
 msgstr "e-mail opnieuw versturen"
 
-#: controller/controller-menu-page.php:104
+#: controller/controller-menu-page.php:186
 msgid "waiting for e-mail"
 msgstr "wachten op e-mail"
 
-#: controller/controller-menu-page.php:107
+#: controller/controller-menu-page.php:189
 msgid "e-mail send"
 msgstr "e-mail verzonden"
 
-#: controller/controller-menu-page.php:110
+#: controller/controller-menu-page.php:192
 msgid "url is visited"
 msgstr "url is bezocht"
 
-#: controller/controller-menu-page.php:148
+#: controller/controller-menu-page.php:233 model/request-form.php:63
 msgid "Data request"
 msgstr "Data aanvraag"
 
-#: controller/controller-menu-page.php:215
+#: controller/controller-menu-page.php:242
 msgid "E-mail send"
 msgstr "E-mail verzonden"
 
-#: controller/controller-menu-page.php:239
+#: controller/controller-menu-page.php:328
 msgid "comments(ID)"
-msgstr "opmerkingen(ID)"
+msgstr "reactie(ID)"
 
-#: controller/controller-menu-page.php:261
+#: controller/controller-menu-page.php:385
 msgid "plugin name"
 msgstr "plugin naam"
+
+#: view/admin/delete-comments-form.php:9
+msgid "Delete comments"
+msgstr "Verwijder reactie"
 
 #: view/admin/menu-page.php:7
 msgid "List of users that requested for information"
@@ -112,6 +125,31 @@ msgstr "Lijst met verzoek tot verwijdering"
 msgid "Resend e-mails"
 msgstr "E-mails opnieuw versturen"
 
+#: view/front/email-template.php:97
+msgid "Request to view your personal data"
+msgstr "GDPR - Verzoek voor inzage in persoonlijke data"
+
+#: view/front/email-template.php:106
+msgid "Dear Sir / Madam"
+msgstr "Beste"
+
+#: view/front/email-template.php:107
+msgid ""
+"You asked to access your personal data. By clicking on the button you can "
+"view or delete your comments created on the website:"
+msgstr ""
+"U vroeg om toegang tot uw persoonlijke gegevens. Door op de knop te "
+"klikken, kunt u uw reacties die u op de website hebt achtergelaten "
+"bekijken of verwijderen:"
+
+#: view/front/email-template.php:115
+msgid "Check your comments"
+msgstr "Bekijk je reacties"
+
+#: view/front/email-template.php:123
+msgid "Thanks for contacting us."
+msgstr "Bedankt om ons te contacteren."
+
 #: view/front/form.php:8
 msgid "E-mail"
 msgstr "E-mail"
@@ -124,9 +162,13 @@ msgstr "Verstuur"
 msgid "Thank You! We will send You e-mail in 48h."
 msgstr "Bedankt! We sturen u binnen 48 uur een e-mail."
 
-#: view/front/gdpr-template.php:2
+#: view/front/gdpr-template.php:74
+msgid "View Comments"
+msgstr "Bekijk reacties"
+
+#: view/front/gdpr-template.php:79
 msgid "All comments added by e-mail address"
-msgstr "Alle opmerkingen toegevoegd via dit e-mailadres"
+msgstr "Alle reacties toegevoegd via dit e-mailadres"
 
 #. Plugin Name of the plugin/theme
 msgid "WP GDPR CORE"
