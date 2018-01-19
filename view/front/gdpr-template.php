@@ -1,7 +1,82 @@
-<?php echo $controller->message; ?>
-<h3><?php _e('All comments added by e-mail address', 'wp_gdpr'); ?>: <?php echo $controller->email_request; ?></h3>
-<?php
-/**
- * create table with comments
- */
-$controller->create_table_with_comments();
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        .container{
+            display: block;
+            Margin: 0 auto !important;
+            max-width: 580px;
+            padding: 10px;
+            width: 580px;
+        }
+        h1{
+            font-size: 35px;
+            font-weight: 300;
+            text-align: center;
+            text-transform: capitalize;
+            color: #000000;
+            font-family: sans-serif;
+            line-height: 1.4;
+            margin: 0 0 30pt;
+        }
+        p, th, td {
+            font-family: sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            margin: 0;
+            Margin-bottom: 15px;
+        }
+        table{
+            width: 100%;
+            border-spacing: 0;
+        }
+        th{
+            text-transform: capitalize;
+            font-weight: 900;
+        }
+        th, td{
+            text-align: left;
+            padding: 15px 5px;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+        #wgdpr_delete_comments_form{
+            margin-top: 30px;
+        }
+        #wgdpr_delete_comments_form input{
+            border: solid 1px #3498db;
+            border-radius: 5px;
+            box-sizing: border-box;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+            padding: 12px 25px;
+            text-decoration: none;
+            text-transform: capitalize;
+            background-color: #3498db;
+            color: #ffffff;
+        }
+    </style>
+    <title><?php _e('View Comments', 'wp_gdpr'); ?></title>
+</head>
+<body>
+<div class="container">
+    <?php echo $controller->message; ?>
+    <h1><?php _e('All comments added by e-mail address', 'wp_gdpr'); ?>: <?php echo $controller->email_request; ?></h1>
+    <?php
+    /**
+     * create table with comments
+     */
+    $controller->create_table_with_comments(); ?>
+    </div>
+</body>
+</html>
+
+
+
+
