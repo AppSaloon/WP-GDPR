@@ -36,7 +36,8 @@ class Controller_Menu_Page {
 				$to      = $comments_to_delete['email'];
 				$subject = __( 'We confirm Your comments deletion request', 'wp_gdpr' );
 				$content = $this->get_confirmation_email_content( $comments_to_delete );
-				wp_mail( $to, $subject, $content );
+				$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+				wp_mail( $to, $subject, $content, $headers );
 			}
 		}
 	}
@@ -98,7 +99,7 @@ class Controller_Menu_Page {
 
 	public function get_confirmation_email_content( $comment_to_delete ) {
 		ob_start();
-		$date_of_request = $comment_to_delete['timestampt'];
+		$date_of_request = $comment_to_delete['timestamp'];
 		include_once GDPR_DIR . 'view/admin/email-confirmation-content.php';
 
 		return ob_get_clean();
@@ -244,6 +245,7 @@ class Controller_Menu_Page {
 				$to             = $this->add_administrator_to_receivers( $to );
 				$subject        = __( 'Data request', 'wp_gdpr' );
 				$request        = $this->get_request_gdpr_by_email( $single_address );
+				$headers        = array( 'Content-Type: text/html; charset=UTF-8' );
 
 				if ( ! $request ) {
 					return;
@@ -253,7 +255,7 @@ class Controller_Menu_Page {
 
 				$this->set_notice( __( 'E-mail send', 'wp_gdpr' ) );
 
-				wp_mail( $to, $subject, $content, array() );
+				wp_mail( $to, $subject, $content, $headers );
 
 				$this->update_gdpr_request_status( $single_address );
 			}

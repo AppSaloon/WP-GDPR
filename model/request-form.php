@@ -63,7 +63,9 @@ class Request_Form extends Form_Validation_Model {
 		$subject    = __( 'Data request', 'wp_gdpr' );
 		$controller = Gdpr_Container::make( 'wp_gdpr\controller\Controller_Menu_Page' );
 		$content    = $controller->get_email_content( $single_address, $time_of_insertion );
-		wp_mail( $to, $subject, $content, array() );
+		$headers    = array( 'Content-Type: text/html; charset=UTF-8' );
+
+		wp_mail( $to, $subject, $content, $headers );
 	}
 
 	public function add_administrator_to_receivers( $to ) {
