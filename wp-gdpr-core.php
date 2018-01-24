@@ -1,6 +1,6 @@
 <?php
 /**
- * WP GDPR CORE
+ * WP GDPR
  *
  * Help to handle gdpr regulations
  *
@@ -11,7 +11,7 @@
  * @copyright 2017 AppSaloon Belgium
  *
  * @wordpress-plugin
- * Plugin Name:       WP GDPR CORE
+ * Plugin Name:       WP GDPR
  * Description:       Help to handle gdpr regulations.
  * Version:           1.0.0
  * Text Domain:       wp_gdpr
