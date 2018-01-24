@@ -16,7 +16,7 @@
  * Version:           1.0.0
  * Text Domain:       wp_gdpr
  * Domain Path:       /languages
- * Author:            Appsaloon
+ * Author:            AppSaloon
  * Author URI:        https://www.appsaloon.be
  */
 
