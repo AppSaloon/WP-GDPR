@@ -406,13 +406,7 @@ class Controller_Menu_Page {
 	 */
 	public function build_table_with_plugins() {
 
-		$plugins = get_plugins();
-		$plugins = array_map( function ( $k ) {
-			return array( $k['Name'] );
-		}, $plugins );
-
-
-		$plugins = $this->filter_plugins( $plugins );
+		$plugins = $this->get_plugins_array();
 
 		$table = new Gdpr_Table_Builder(
 			array( __( 'plugin name', 'wp_gdpr' ) ),
@@ -428,14 +422,28 @@ class Controller_Menu_Page {
 	 * @return array
 	 */
 	public function filter_plugins( $plugins ) {
-
-		return array_filter( $plugins, function ( $data ) {
-			$plugin_name = strtolower( $data[0] );
-			foreach ( array( 'woocommerce', 'gdpr', 'gravity' ) as $pl ) {
-				if ( strpos( $plugin_name, $pl ) !== false ) {
-					return true;
-				}
+		return array_map( function ( $data ) {
+			if ( isset( $data['name'] ) ) {
+				return array( $data['name'] );
+			}else{
+				return array('empty');
 			}
-		} );
+		}, $plugins );
+	}
+
+	/**
+	 * @return array|bool|mixed|object|string
+	 */
+	public function get_plugins_array() {
+		if ( is_file( GDPR_DIR . 'assets/json/plugins.json' ) ) {
+			$plugins = file_get_contents( GDPR_DIR . 'assets/json/plugins.json' );
+			$plugins = json_decode( $plugins, true );
+		} else {
+			$plugins = array();
+		}
+
+		$plugins = $this->filter_plugins( $plugins );
+
+		return $plugins;
 	}
 }
