@@ -5,10 +5,10 @@
  * Help to handle gdpr regulations
  *
  * @package   WP GDPR CORE
- * @author    AppSaloon - Sebastian Kurzynowski
+ * @author    AppSaloon
  * @license   proprietary
- * @link      https://appsaloon.be
- * @copyright 2017 AppSaloon Belgium
+ * @link      https://wp-gdpr.eu
+ * @copyright 2017 wp-gdpr
  *
  * @wordpress-plugin
  * Plugin Name:       WP GDPR CORE
@@ -16,7 +16,7 @@
  * Version:           1.0.0
  * Text Domain:       wp_gdpr
  * Domain Path:       /languages
- * Author:            Appsaloon - Sebastian Kurzynowski, Mieke Nijs
+ * Author:            Appsaloon
  * Author URI:        https://www.appsaloon.be
  */
 

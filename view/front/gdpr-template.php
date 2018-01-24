@@ -11,11 +11,10 @@
             padding: 10px;
             width: 580px;
         }
-        h1{
-            font-size: 35px;
+        h2{
+            font-size: 25px;
             font-weight: 300;
             text-align: center;
-            text-transform: capitalize;
             color: #000000;
             font-family: sans-serif;
             line-height: 1.4;
@@ -76,7 +75,7 @@
 <body>
 <div class="container">
     <?php echo $controller->message; ?>
-    <h1><?php _e('All comments added by e-mail address', 'wp_gdpr'); ?>: <?php echo $controller->email_request; ?></h1>
+    <h2><?php _e('All comments added by e-mail address', 'wp_gdpr'); ?>: <?php echo $controller->email_request; ?></h2>
     <?php
     /**
      * create table with comments
