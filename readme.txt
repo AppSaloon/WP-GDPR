@@ -1,7 +1,7 @@
 === WP GDPR ===
 Contributors: Mieke Nijs, Sebastian Kurzynowski, AppSaloon
 Tags: Personal data, GDPR, European, regulation, data
-Requires at least: 4.9.1
+Requires at least: 4.8.0
 Tested up to: 4.9.2
 Requires PHP: 5.6
 License: GPLv2 or later
@@ -13,12 +13,12 @@ The plugin gives you advice on how to be compliant with GDPR and witch actions y
 
 
 == Description ==
-The plugin gives you advice on how to be compliant with GDPR and witch actions you need to take in order to be compliant.
-It adds a checklist to the backend where you can see what you need to do in order to be compliant and gives you default text that you can add to different forms.
+The plugin will create a page where users can request access to their personal data, stored on your website.
+In the backend you'll get an overview of the requests users send and you can see which plugins collect personal data and need a 'ask for approval' checkbox.
 
-The plugin wil create a page where users can request access to their personal data, stored on your website.
-
-In a fist stage they can view which comments they posted and ask for a removal per comment.
+In a fist stage users who ask to view their personal data will get an email with a unique url on which they can view their comments and ask for a removal per comment.
+When they ask for a removal, the admin has the ability to delete the comment through the wp-gdpr backend.
+All emails will be send automatically.
 
 In the second stage they can view, update and download their personal data or ask for a removal and this for WP Comments and Contact Form 7 CFDB7.
 
