@@ -22,6 +22,7 @@ class Controller_Comments {
 			add_action( 'wp_enqueue_scripts', array( $this, 'loadStyle' ), 10 );
 		}
 		add_action( 'init', array( $this, 'save_delete_request' ) );
+		add_action( 'init', array( $this, 'download_csv' ) );
 	}
 
 	/**
@@ -76,6 +77,29 @@ class Controller_Comments {
 		$table_name = $wpdb->prefix . 'gdpr_requests';
 
 		$wpdb->update( $table_name, array( 'status' => 2 ), array( 'email' => $email ) );
+	}
+
+	public function download_csv() {
+		//DOWNLOAD CSV
+		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_download_csv'] ) ) {
+			//save in database
+			if ( isset( $_REQUEST['gdpr_email'] ) ) {
+				$user_email = sanitize_email( $_REQUEST['gdpr_email'] );
+			}
+
+			global $wpdb;
+
+			//DOWNLOAD all
+			if( ! empty( $user_email ))
+			{
+				$all_comments = $this->get_all_comments_by_author( $user_email );
+			}
+
+			if ( ! empty( $all_comments ))
+			{
+				//create csv object and download comments
+			}
+		}
 	}
 
 	/**
@@ -188,7 +212,7 @@ class Controller_Comments {
 					'timestamp' => current_time( 'mysql' )
 				)
 			);
-			$this->message = '<h3>'. __("The site administrator received your request. Thank You.","wp_gdpr") .'</h3>';
+			$this->message = '<h3>' . __( "The site administrator received your request. Thank You.", "wp_gdpr" ) . '</h3>';
 			//TODO email to admin
 		}
 
