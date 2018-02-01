@@ -146,6 +146,8 @@ class Controller_Comments {
 		$table = new Gdpr_Table_Builder(
 			array(
 				__( 'comment date', 'wp_gdpr' ),
+				__( 'author email', 'wp_gdpr' ),
+				__( 'author name', 'wp_gdpr' ),
 				__( 'comment content', 'wp_gdpr' ),
 				__( 'post ID', 'wp_gdpr' ),
 				__( 'delete', 'wp_gdpr' )
@@ -165,13 +167,22 @@ class Controller_Comments {
 		$comments = array_map( function ( $data ) {
 			return array(
 				'comment_date'    => $data->comment_date,
-				'comment_content' => $data->comment_content,
+				'email'           => $this->change_into_input( $data->comment_author_email),
+				'name'            => $this->change_into_input( $data->comment_author),
+				'comment_content' => $this->change_into_textarea( $data->comment_content ),
 				'comment_post_ID' => $data->comment_post_ID,
 				'comment_ID'      => $data->comment_ID
 			);
 		}, $comments );
 
 		return $comments;
+	}
+
+	public function change_into_input( $val ) {
+		return '<input type="text"    value="' . $val . '">';
+	}
+	public function change_into_textarea( $val ) {
+		return '<textarea> ' . $val . '</textarea>';
 	}
 
 	/**
