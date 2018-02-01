@@ -15,15 +15,17 @@ class Controller_Comments {
 	 */
 	public $email_request;
 	public $message;
+	public $register_here;
 
 	public function __construct() {
 		$this->redirect_template();
 		$page_slug = trim( $_SERVER["REQUEST_URI"], '/' );
 		if ( strpos( $page_slug, 'gdpr' ) !== false ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'loadStyle' ), 10 );
+			add_action( 'wp_enqueue_scripts', array( $this, 'load_style' ), 10 );
 		}
 		add_action( 'init', array( $this, 'save_delete_request' ) );
 		add_action( 'init', array( $this, 'download_csv' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ));
 	}
 
 	/**
@@ -32,7 +34,7 @@ class Controller_Comments {
 	public function redirect_template() {
 		if ( $this->decode_url_request() ) {
 			add_action( 'template_redirect', array( $this, 'get_template' ) );
-
+			$this->register_here = true;
 			/**
 			 * update status to 'url visited'
 			 */
@@ -78,6 +80,13 @@ class Controller_Comments {
 		$table_name = $wpdb->prefix . 'gdpr_requests';
 
 		$wpdb->update( $table_name, array( 'status' => 2 ), array( 'email' => $email ) );
+	}
+
+	public function load_scripts() {
+		if ($this->register_here == true)
+		{
+			wp_enqueue_script( 'gdpr-main-js', GDPR_URL . 'assets/js/update_comments.js', array( 'jquery' ), '', false );
+		}
 	}
 
 	public function download_csv() {
@@ -131,7 +140,7 @@ class Controller_Comments {
 	public function get_template() {
 		$controller = $this;
 		include_once GDPR_DIR . 'view/front/gdpr-template.php';
-		die;
+		wp_die();
 	}
 
 	/**
@@ -167,8 +176,8 @@ class Controller_Comments {
 		$comments = array_map( function ( $data ) {
 			return array(
 				'comment_date'    => $data->comment_date,
-				'email'           => $this->change_into_input( $data->comment_author_email),
-				'name'            => $this->change_into_input( $data->comment_author),
+				'email'           => $this->change_into_input( $data->comment_author_email ),
+				'name'            => $this->change_into_input( $data->comment_author ),
 				'comment_content' => $this->change_into_textarea( $data->comment_content ),
 				'comment_post_ID' => $data->comment_post_ID,
 				'comment_ID'      => $data->comment_ID
@@ -181,6 +190,7 @@ class Controller_Comments {
 	public function change_into_input( $val ) {
 		return '<input type="text"    value="' . $val . '">';
 	}
+
 	public function change_into_textarea( $val ) {
 		return '<textarea> ' . $val . '</textarea>';
 	}
@@ -208,7 +218,7 @@ class Controller_Comments {
 		return '<input type="checkbox" form="wgdpr_delete_comments_form"  name="gdpr_delete_comments[]" value="' . $comment_id . '">';
 	}
 
-	public function loadStyle() {
+	public function load_style() {
 		wp_enqueue_style( 'gdpr-main-css', GDPR_URL . 'assets/css/main.css' );
 	}
 

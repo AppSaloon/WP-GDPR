@@ -71,6 +71,7 @@
         }
     </style>
     <title><?php _e('View Comments', 'wp_gdpr'); ?></title>
+    <?php  wp_head(); ?>
 </head>
 <body>
 <div class="container">
@@ -83,7 +84,9 @@
     $controller->create_table_with_comments(); ?>
     </div>
 </body>
+<?php wp_footer(); ?>
 </html>
+
 
 
 
