@@ -2,33 +2,73 @@
 
 namespace wp_gdpr\model;
 
-class Csv_Downloader
-{
+class Csv_Downloader {
+	/**
+	 * @var
+	 * set filename
+	 */
+	public $filename;
+	/**
+	 * @var
+	 * headers of CSV
+	 */
+	public $headers;
+
+	/**
+	 * @var
+	 */
+	public $data;
+
 	/**
 	 * void function to download csv
 	 */
 	public function download_csv() {
+		// headers for csv
+		header( 'Content-Description: File Transfer' );
+		header( 'Content-Encoding: UTF-8' );
+		header( 'Content-Type: text/csv; charset=UTF-8' );
+		header( 'Content-Disposition: attachment; filename=' . $this->filename . '.csv' );
+		header( 'Content-Transfer-Encoding: binary' );
+		echo "\xEF\xBB\xBF";
 
+		//output on browser
+		$output = fopen( 'php://output', 'w' );
+
+		//create csv headers
+		fputcsv( $output, $this->headers );
+
+		//foreach array in body array create csv row
+		foreach ( $this->data as $fields ) {
+			fputcsv( $output, $fields );
+		}
+
+		//when creating rows is finished close file
+		fclose( $output );
+
+		//in this moment file should appear in browser
+		die;
 	}
 
 	public function add_headers( $array_headers ) {
-		return true;
+		$this->headers = $array_headers;
 	}
 
-	/**
-	 * create body
-	 */
-	public function create_body( )
-	{
-
+	public function set_filename( $name ) {
+		$this->filename = $name;
 	}
+
 
 	/**
 	 * @param $array_comments
 	 * add comments to download
 	 */
-	public function add_comments_to_download($array_comments)
-	{
-
+	public function map_comments_into_csv_data( $array_comments ) {
+		$this->data = array_map( function ( $data ) {
+			return
+				array(
+					$data->comment_author,
+					$data->comment_content
+				);
+		}, $array_comments );
 	}
 }

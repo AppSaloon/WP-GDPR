@@ -7,6 +7,7 @@ use wp_gdpr\lib\Gdpr_Container;
 use wp_gdpr\lib\Gdpr_Table_Builder;
 
 class Controller_Comments {
+	const CSV_NAME = 'comments_csv';
 
 	/**
 	 * @var $email_request string
@@ -99,8 +100,8 @@ class Controller_Comments {
 				$csv = Gdpr_Container::make( 'wp_gdpr\model\Csv_Downloader' );
 				//TODO write headers
 				$csv->add_headers( array( 'email', 'comment' ) );
-				$csv->add_comments_to_download( $all_comments );
-				$csv->create_body();
+				$csv->set_filename( self::CSV_NAME );
+				$csv->map_comments_into_csv_data( $all_comments );
 				$csv->download_csv();
 			}
 		}
