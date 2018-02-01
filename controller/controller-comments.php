@@ -7,6 +7,7 @@ use wp_gdpr\lib\Gdpr_Container;
 use wp_gdpr\lib\Gdpr_Table_Builder;
 
 class Controller_Comments {
+	const CSV_NAME = 'comments_csv';
 
 	/**
 	 * @var $email_request string
@@ -90,16 +91,36 @@ class Controller_Comments {
 			global $wpdb;
 
 			//DOWNLOAD all
-			if( ! empty( $user_email ))
-			{
+			if ( ! empty( $user_email ) ) {
 				$all_comments = $this->get_all_comments_by_author( $user_email );
 			}
 
-			if ( ! empty( $all_comments ))
-			{
+			if ( ! empty( $all_comments ) ) {
 				//create csv object and download comments
+				$csv = Gdpr_Container::make( 'wp_gdpr\model\Csv_Downloader' );
+				$csv->add_headers(
+					array(
+						__( 'name', 'wp_gdpr' ),
+						__( 'email', 'wp_gdpr' ),
+						__( 'comment', 'wp_gdpr' ),
+						__( 'website', 'wp_gdpr' ),
+					)
+				);
+				$csv->set_filename( self::CSV_NAME );
+				$csv->map_comments_into_csv_data( $all_comments );
+				$csv->download_csv();
 			}
 		}
+	}
+
+	/**
+	 * @param $author_email
+	 *
+	 * @return array|int
+	 * get all comments from default comments table
+	 */
+	public function get_all_comments_by_author( $author_email ) {
+		return get_comments( array( 'author_email' => $author_email ) );
 	}
 
 	/**
@@ -133,16 +154,6 @@ class Controller_Comments {
 			, array( $this->get_form_content() ), 'gdpr_comments_table' );
 
 		$table->print_table();
-	}
-
-	/**
-	 * @param $author_email
-	 *
-	 * @return array|int
-	 * get all comments from default comments table
-	 */
-	public function get_all_comments_by_author( $author_email ) {
-		return get_comments( array( 'author_email' => $author_email ) );
 	}
 
 	/**
