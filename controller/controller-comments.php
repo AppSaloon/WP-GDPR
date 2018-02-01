@@ -242,7 +242,7 @@ class Controller_Comments {
 				'comment_date'    => $data->comment_date,
 				'email'           => $this->change_into_input( $data->comment_author_email, 'comment_author_email', $data->comment_ID ),
 				'name'            => $this->change_into_input( $data->comment_author, 'comment_author', $data->comment_ID ),
-				'comment_content' => $this->change_into_textarea( $data->comment_content, 'comment_content', $data->comment_ID ),
+				'comment_content' =>  $data->comment_content,
 				'comment_post_ID' => $data->comment_post_ID,
 				'comment_ID'      => $data->comment_ID
 			);
