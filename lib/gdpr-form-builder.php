@@ -34,7 +34,7 @@ class Gdpr_Form_Builder {
             <input type="text" name="request_add_on" required></br>
             <label for="email"><?php _e('Email', 'wp_gdpr'); ?>:</label>
             <input type="email" name="email" required>
-            <p><?php  sprintf(_e('This form collects your email so that we can keep you updated about your request. Check out our <a href="%s" target="_blank">privacy policy</a> for more information.', 'wp_gdpr'), 'test.html'); ?></p>
+            <p><?php  sprintf(_e('This form collects your email so that we can keep you updated about your request. Check out our <a href="%s" target="_blank">privacy policy</a> for more information.', 'wp_gdpr'), 'https://wp-gdpr.eu/privacy-policy/'); ?></p>
             <input name="gdpr" type="checkbox" value="I consent to having WP-GDPR collect my email when provided." required>
             <label for="gdpr" id="gdpr"><?php _e('I consent to having WP-GDPR collect my email when provided.', 'wp_gdpr'); ?></label></br>
             <input type="submit" class="button button-primary" value="<?php _e('submit', 'wp_gdpr'); ?>">
