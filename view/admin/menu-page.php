@@ -16,6 +16,11 @@ $controller->build_table_with_requests();
 <?php $controller->build_table_with_plugins(); ?>
     <h2><?php _e('List of delete requests', 'wp_gdpr'); ?></h2>
 	<?php $controller->build_table_with_delete_requests(); ?>
+
+    <h2><?php _e('Request your own add-on', 'wp_gdpr'); ?></h2>
+    <?php $controller->build_form_to_request_add_on(); ?>
+
+
 </div>
 
 

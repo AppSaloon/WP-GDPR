@@ -1,7 +1,7 @@
 === WP GDPR ===
 Contributors: Mieke Nijs, Sebastian Kurzynowski, AppSaloon
 Tags: Personal data, GDPR, European, regulation, data
-Requires at least: 4.8.0
+Requires at least: 4.6.10
 Tested up to: 4.9.2
 Requires PHP: 5.6
 License: GPLv2 or later

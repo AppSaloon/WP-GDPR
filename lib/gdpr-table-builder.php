@@ -98,16 +98,15 @@ class Gdpr_Table_Builder {
 		?>
         <tfoot>
         <tr>
-			<?php foreach ( $this->footer as $footer ) : ?>
-                <td><?php echo $footer; ?></td>
-			<?php endforeach; ?>
             <?php
             $total_th = count($this->head);
-            $total_td = $total_th - count($this->footer);
-            for($i=0; $i<$total_td; $i++){ ?>
-                <td> </td>
-            <?php }
-            ?>
+            $colspan = '';
+            if(count($this->footer) === 1){
+                $colspan = ' colspan="'.$total_th.'"';
+            } ?>
+			<?php foreach ( $this->footer as $footer ) : ?>
+                <td<?php echo $colspan; ?>><?php echo $footer; ?></td>
+			<?php endforeach; ?>
         </tr>
         </tfoot>
 		<?php
