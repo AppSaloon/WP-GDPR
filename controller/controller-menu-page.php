@@ -55,6 +55,8 @@ class Controller_Menu_Page {
             $headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
             wp_mail( $to, $subject, $content, $headers );
+
+            $this->set_notice( __( 'Request send', 'wp_gdpr' ) );
         }
     }
 
