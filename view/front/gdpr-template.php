@@ -77,6 +77,7 @@
 <div class="container">
     <?php echo $controller->message; ?>
     <h2><?php _e('All comments added by e-mail address', 'wp_gdpr'); ?>: <?php echo $controller->email_request; ?></h2>
+    <div class="js-update-message"></div>
     <?php
     /**
      * create table with comments

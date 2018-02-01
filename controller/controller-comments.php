@@ -25,7 +25,9 @@ class Controller_Comments {
 		}
 		add_action( 'init', array( $this, 'save_delete_request' ) );
 		add_action( 'init', array( $this, 'download_csv' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ));
+		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
+		add_action( 'wp_ajax_wp_gdpr', array( $this, 'wp_gdpr' ) );
+		add_action( 'wp_ajax_nopriv_wp_gdpr', array( $this, 'wp_gdpr' ) );
 	}
 
 	/**
@@ -82,10 +84,72 @@ class Controller_Comments {
 		$wpdb->update( $table_name, array( 'status' => 2 ), array( 'email' => $email ) );
 	}
 
+	public function wp_gdpr() {
+		switch ( $_REQUEST['action_switch'] ) {
+			case 'edit_comment':
+
+				$field      = sanitize_text_field( $_REQUEST['input_name'] );
+				$new_value  = $_REQUEST['new_value'];
+				$comment_id = sanitize_text_field( $_REQUEST['comment_id'] );
+
+				//when id is not a number
+				if ( ! is_numeric( $comment_id ) ) {
+					wp_send_json( __( 'Something went wrong.', 'wp_gdpr' ) );
+				}
+
+				//when email update
+				if ( 'comment_author_email' === $field ) {
+					$new_value = sanitize_email( $new_value );
+					if ( empty ( $new_value ) ) {
+						wp_send_json( '<h3>' . __( 'Email is not valid', 'wp_gdpr' ) . '</h3>' );
+					}
+					//when other inputs edit
+				} else {
+					$new_value = sanitize_text_field( $new_value );
+				}
+
+
+				//create args of comment to update
+				$comment = $this->build_comment( $comment_id, $field, $new_value );
+
+				wp_update_comment(
+					$comment
+				);
+
+				//send feedback
+				wp_send_json( '<h3>' . __( 'Comment is changed', 'wp_gdpr' ) . '</h3>' );
+				break;
+		}
+	}
+
+	/**
+	 * @param $comment_id
+	 * @param $field
+	 * @param $new_value
+	 *
+	 * @return array
+	 */
+	public function build_comment( $comment_id, $field, $new_value ) {
+		$comment = array(
+			'comment_ID' => $comment_id,
+			$field       => $new_value,
+		);
+
+		//if setting require approve of comment set as unapproved
+		if ( 1 == get_option( 'comment_moderation', true ) ) {
+			$comment['comment_approved'] = 0;
+		}
+
+		return $comment;
+	}
+
 	public function load_scripts() {
-		if ($this->register_here == true)
-		{
+		if ( $this->register_here == true ) {
 			wp_enqueue_script( 'gdpr-main-js', GDPR_URL . 'assets/js/update_comments.js', array( 'jquery' ), '', false );
+			wp_localize_script( 'gdpr-main-js', 'localized_object', array(
+				'url'    => admin_url( 'admin-ajax.php' ),
+				'action' => 'wp_gdpr'
+			) );
 		}
 	}
 
@@ -176,9 +240,9 @@ class Controller_Comments {
 		$comments = array_map( function ( $data ) {
 			return array(
 				'comment_date'    => $data->comment_date,
-				'email'           => $this->change_into_input( $data->comment_author_email ),
-				'name'            => $this->change_into_input( $data->comment_author ),
-				'comment_content' => $this->change_into_textarea( $data->comment_content ),
+				'email'           => $this->change_into_input( $data->comment_author_email, 'comment_author_email', $data->comment_ID ),
+				'name'            => $this->change_into_input( $data->comment_author, 'comment_author', $data->comment_ID ),
+				'comment_content' => $this->change_into_textarea( $data->comment_content, 'comment_content', $data->comment_ID ),
 				'comment_post_ID' => $data->comment_post_ID,
 				'comment_ID'      => $data->comment_ID
 			);
@@ -187,12 +251,12 @@ class Controller_Comments {
 		return $comments;
 	}
 
-	public function change_into_input( $val ) {
-		return '<input type="text"    value="' . $val . '">';
+	public function change_into_input( $val, $name, $id ) {
+		return '<input type="text" data-id="' . $id . '" data-name="' . $name . '" class="js-comment-edit" value="' . $val . '">';
 	}
 
-	public function change_into_textarea( $val ) {
-		return '<textarea> ' . $val . '</textarea>';
+	public function change_into_textarea( $val, $name, $id ) {
+		return '<textarea data-id="' . $id . '" data-name="' . $name . '" class="js-comment-edit"> ' . $val . '</textarea>';
 	}
 
 	/**
