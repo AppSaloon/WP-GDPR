@@ -6,6 +6,7 @@ namespace wp_gdpr\controller;
 use wp_gdpr\lib\Gdpr_Customtables;
 use wp_gdpr\lib\Gdpr_Table_Builder;
 use wp_gdpr\lib\Gdpr_Container;
+use wp_gdpr\lib\Gdpr_Form_Builder;
 
 class Controller_Menu_Page {
 
@@ -19,6 +20,10 @@ class Controller_Menu_Page {
 		if ( ! has_action( 'init', array( $this, 'delete_comments' ) ) ) {
 			add_action( 'init', array( $this, 'delete_comments' ) );
 		}
+        if ( ! has_action( 'init', array( $this, 'request_add_on' ) ) ) {
+            add_action( 'init', array( $this, 'request_add_on' ) );
+        }
+        add_action('admin_enqueue_scripts', array( $this,'adminStyle'));
 	}
 
 	/**
@@ -41,6 +46,17 @@ class Controller_Menu_Page {
 			}
 		}
 	}
+
+	public function request_add_on(){
+        if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['request_add_on'] ) ) {
+            $to = 'info@wp-gdpr.eu';
+            $subject = 'request wp-gdpr add-on';
+            $content = '<p>Request develop add-on for plugin: ' . $_POST["request_add_on"] . '</p><p>Email: ' . $_POST["email"] . '</p><p>' . $_POST["gdpr"] . '</p>';
+            $headers = array( 'Content-Type: text/html; charset=UTF-8' );
+
+            wp_mail( $to, $subject, $content, $headers );
+        }
+    }
 
 	/**
 	 * @param $id
@@ -446,4 +462,17 @@ class Controller_Menu_Page {
 
 		return $plugins;
 	}
+
+
+    /**
+     * build form to request add-on
+     */
+    public function build_form_to_request_add_on() {
+        $form = new Gdpr_Form_Builder();
+        $form->print_form();
+    }
+
+    public function adminStyle() {
+        wp_enqueue_style( 'gdpr-admin-css', GDPR_URL . 'assets/css/admin.css' );
+    }
 }

@@ -1,0 +1,19 @@
+form.postbox{
+    padding: 10px;"
+}
+form.postbox label{
+    width: 40%;
+    display: inline-block;
+    max-width: 200px;
+}
+form.postbox label#gdpr{
+    width: 90%;
+    max-width: unset;
+}
+form.postbox input[type="text"], form.postbox input[type="email"]{
+    width: 59%;
+    max-width: 400px;
+}
+form.postbox input[type="submit"]{
+    margin-top: 20px;
+}

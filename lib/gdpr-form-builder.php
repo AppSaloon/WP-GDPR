@@ -1,0 +1,44 @@
+<?php
+
+
+namespace wp_gdpr\lib;
+
+/**
+ * Class GDPR_Table_Builder
+ * @package wp_gdpr\lib
+ *
+ * allows to build simple table
+ */
+class Gdpr_Form_Builder {
+
+    /**
+     * GDPR_Form_Builder constructor.
+     */
+    public function __construct() {
+    }
+
+    /**
+     * show form
+     */
+    public function print_form() {
+        $this->build_form();
+    }
+
+    /**
+     * table open tab
+     */
+    public function build_form() {
+        ?>
+        <form method="post" action="" class="postbox">
+            <label for="request_add_on"><?php _e('Request add-on for your plugin', 'wp_gdpr'); ?>:</label>
+            <input type="text" name="request_add_on" required></br>
+            <label for="email"><?php _e('Email', 'wp_gdpr'); ?>:</label>
+            <input type="email" name="email" required>
+            <p><?php  sprintf(_e('This form collects your email so that we can keep you updated about your request. Check out our <a href="%s" target="_blank">privacy policy</a> for more information.', 'wp_gdpr'), 'test.html'); ?></p>
+            <input name="gdpr" type="checkbox" value="I consent to having WP-GDPR collect my email when provided." required>
+            <label for="gdpr" id="gdpr"><?php _e('I consent to having WP-GDPR collect my email when provided.', 'wp_gdpr'); ?></label></br>
+            <input type="submit" class="button button-primary" value="<?php _e('submit', 'wp_gdpr'); ?>">
+        </form>
+        <?php
+    }
+}
