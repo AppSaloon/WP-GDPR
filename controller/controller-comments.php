@@ -98,8 +98,14 @@ class Controller_Comments {
 			if ( ! empty( $all_comments ) ) {
 				//create csv object and download comments
 				$csv = Gdpr_Container::make( 'wp_gdpr\model\Csv_Downloader' );
-				//TODO write headers
-				$csv->add_headers( array( 'email', 'comment' ) );
+				$csv->add_headers(
+					array(
+						__( 'name', 'wp_gdpr' ),
+						__( 'email', 'wp_gdpr' ),
+						__( 'comment', 'wp_gdpr' ),
+						__( 'website', 'wp_gdpr' ),
+					)
+				);
 				$csv->set_filename( self::CSV_NAME );
 				$csv->map_comments_into_csv_data( $all_comments );
 				$csv->download_csv();
