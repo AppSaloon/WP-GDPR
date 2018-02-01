@@ -69,7 +69,7 @@ class Csv_Downloader {
 					$data->comment_author,
 					$data->comment_author_email,
 					$data->comment_content,
-					home_url(),
+					$data->comment_author_url,
 				);
 		}, $array_comments );
 	}

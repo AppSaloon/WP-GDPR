@@ -28,6 +28,21 @@ class Controller_Comments {
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 		add_action( 'wp_ajax_wp_gdpr', array( $this, 'wp_gdpr' ) );
 		add_action( 'wp_ajax_nopriv_wp_gdpr', array( $this, 'wp_gdpr' ) );
+		// comment form validation
+		add_filter( 'pre_comment_approved', array( $this, 'preprocess_comment_callback' ), 1 );
+		add_filter( 'comment_form_default_fields', array( $this, 'comment_form_default_fields_callback' ), 1 );
+	}
+
+	/**
+	 * @param $fields
+	 *
+	 * @return mixed
+	 * add extra input
+	 */
+	public function comment_form_default_fields_callback( $fields ) {
+		$fields['gdpr'] =  '<p class="comment-form-gdpr">' . '<label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our privacy policy where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) .  ' <span class="required">*</span></label> ' .
+		                   '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __('Agree', 'wp_gdpr') . '</p>';
+		return $fields;
 	}
 
 	/**
@@ -82,6 +97,14 @@ class Controller_Comments {
 		$table_name = $wpdb->prefix . 'gdpr_requests';
 
 		$wpdb->update( $table_name, array( 'status' => 2 ), array( 'email' => $email ) );
+	}
+
+	public function preprocess_comment_callback( $data ) {
+		if ( ! isset( $_POST['gdpr'] ) || $_POST['gdpr'] !== 'on' ) {
+			return new \WP_Error( 'comment_gdpr_required',__( '<strong>ERROR</strong>: please fill the required fields (GDPR checkbox).' ), 409 );
+		}
+
+		return $data;
 	}
 
 	public function wp_gdpr() {
@@ -242,7 +265,7 @@ class Controller_Comments {
 				'comment_date'    => $data->comment_date,
 				'email'           => $this->change_into_input( $data->comment_author_email, 'comment_author_email', $data->comment_ID ),
 				'name'            => $this->change_into_input( $data->comment_author, 'comment_author', $data->comment_ID ),
-				'comment_content' =>  $data->comment_content,
+				'comment_content' => $data->comment_content,
 				'comment_post_ID' => $data->comment_post_ID,
 				'comment_ID'      => $data->comment_ID
 			);
@@ -255,10 +278,6 @@ class Controller_Comments {
 		return '<input type="text" data-id="' . $id . '" data-name="' . $name . '" class="js-comment-edit" value="' . $val . '">';
 	}
 
-	public function change_into_textarea( $val, $name, $id ) {
-		return '<textarea data-id="' . $id . '" data-name="' . $name . '" class="js-comment-edit"> ' . $val . '</textarea>';
-	}
-
 	/**
 	 *
 	 * @return string
@@ -269,6 +288,10 @@ class Controller_Comments {
 		include_once GDPR_DIR . 'view/admin/small-form-delete-request.php';
 
 		return ob_get_clean();
+	}
+
+	public function change_into_textarea( $val, $name, $id ) {
+		return '<textarea data-id="' . $id . '" data-name="' . $name . '" class="js-comment-edit"> ' . $val . '</textarea>';
 	}
 
 	public function add_checkbox( $comment ) {
