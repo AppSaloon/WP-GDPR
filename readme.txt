@@ -40,3 +40,8 @@ In the third stage they can view, update and download their personal data or ask
 == Frequently Asked Questions ==
 
 == Changelog ==
+Version 1.1.0
+	- Add name and e-mail field to comments list
+	- Let users update their name and e-mail
+	- Add download button to comments list
+	- Make it possible for the admin to choose between delete comment or make comment anonymous
