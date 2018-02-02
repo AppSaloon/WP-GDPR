@@ -30,15 +30,17 @@ class Controller_Menu_Page {
 	 * delete all comments selected in admin menu in form
 	 */
 	public function post_delete_comments() {
-		if ( 'POST' == $_SERVER['REQUEST_METHOD']  && isset( $_REQUEST['gdpr_requests'] ) && is_array( $_REQUEST['gdpr_requests'] ) ) {
+		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_requests'] ) && is_array( $_REQUEST['gdpr_requests'] ) ) {
 
 
 			foreach ( $_REQUEST['gdpr_requests'] as $single_request_id ) {
 				//get all selected comments
 				//unserialize
-				$single_request_id  = sanitize_text_field( $single_request_id );
-				$comments_to_delete = $this->find_delete_request_by_id( $single_request_id );
+				$single_request_id     = sanitize_text_field( $single_request_id );
+				$comments_to_delete    = $this->find_delete_request_by_id( $single_request_id );
 				$unserialized_comments = $this->unserialize( $comments_to_delete['comments'] );
+				//get all comments before process to show info in email
+				$original_comments = $this->get_original_comments( $unserialized_comments );
 				//check post request
 				if ( isset( $_REQUEST['gdpr_delete_comments'] ) ) {
 					//delete
@@ -59,8 +61,10 @@ class Controller_Menu_Page {
 
 				$to      = $comments_to_delete['email'];
 				$subject = __( 'We confirm Your comments deletion request', 'wp_gdpr' );
-				$content = $this->get_confirmation_email_content( $comments_to_delete );
-				$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+				//change comment object into one row string for email table
+				$processed_data = array_map( array( $this, 'map_comments_for_email' ), $original_comments );
+				$content        = $this->get_confirmation_email_content( $comments_to_delete, $processed_data );
+				$headers        = array( 'Content-Type: text/html; charset=UTF-8' );
 				wp_mail( $to, $subject, $content, $headers );
 			}
 		}
@@ -101,6 +105,13 @@ class Controller_Menu_Page {
 	}
 
 	/**
+	 * @return array
+	 */
+	public function get_original_comments( $comments ) {
+		return get_comments( array( 'comment__in' => $comments ) );
+	}
+
+	/**
 	 * @param $comments
 	 *
 	 * unserialize serialized array with comments_ids
@@ -111,22 +122,6 @@ class Controller_Menu_Page {
 		}
 	}
 
-	/**
-	 * @param $comments
-	 * make comments anonymous
-	 */
-	public function make_anonymous( $comments ) {
-		foreach ( $comments as $comment_id ) {
-			$args = array(
-				'comment_ID' => $comment_id,
-				'comment_author' => 'anonymous',
-				'comment_author_email' => 'anonymous@anony.eu',
-				'comment_author_url' => ''
-			);
-
-			wp_update_comment( $args );
-		}
-	}
 	/**
 	 * delete row by id from table with delete_requests
 	 */
@@ -147,12 +142,34 @@ class Controller_Menu_Page {
 		$notice->register_notice();
 	}
 
-	public function get_confirmation_email_content( $comment_to_delete ) {
+	/**
+	 * @param $comments
+	 * make comments anonymous
+	 */
+	public function make_anonymous( $comments ) {
+		foreach ( $comments as $comment_id ) {
+			$args = array(
+				'comment_ID'           => $comment_id,
+				'comment_author'       => 'anonymous',
+				'comment_author_email' => 'anonymous@anony.eu',
+				'comment_author_url'   => ''
+			);
+
+			wp_update_comment( $args );
+		}
+	}
+
+	public function get_confirmation_email_content( $comment_to_delete, $processed_data ) {
 		ob_start();
 		$date_of_request = $comment_to_delete['timestamp'];
 		include_once GDPR_DIR . 'view/admin/email-confirmation-content.php';
 
 		return ob_get_clean();
+	}
+
+	public function map_comments_for_email( $data ) {
+
+		return __( 'Comment author', 'wp_gdpr' ) . ': ' . $data->comment_author . ' ' . __( 'content', 'wp_gdpr' ) . ': ' . $data->comment_content;
 	}
 
 	public function request_add_on() {
