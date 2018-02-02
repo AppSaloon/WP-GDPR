@@ -17,27 +17,46 @@ class Controller_Menu_Page {
 		if ( ! has_action( 'init', array( $this, 'send_email' ) ) ) {
 			add_action( 'init', array( $this, 'send_email' ) );
 		}
-		if ( ! has_action( 'init', array( $this, 'delete_comments' ) ) ) {
-			add_action( 'init', array( $this, 'delete_comments' ) );
+		if ( ! has_action( 'init', array( $this, 'post_delete_comments' ) ) ) {
+			add_action( 'init', array( $this, 'post_delete_comments' ) );
 		}
-        if ( ! has_action( 'init', array( $this, 'request_add_on' ) ) ) {
-            add_action( 'init', array( $this, 'request_add_on' ) );
-        }
-        add_action('admin_enqueue_scripts', array( $this,'adminStyle'));
+		if ( ! has_action( 'init', array( $this, 'request_add_on' ) ) ) {
+			add_action( 'init', array( $this, 'request_add_on' ) );
+		}
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_style' ) );
 	}
 
 	/**
 	 * delete all comments selected in admin menu in form
 	 */
-	public function delete_comments() {
-		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_delete_comments'] ) && isset( $_REQUEST['gdpr_requests'] ) && is_array( $_REQUEST['gdpr_requests'] ) ) {
+	public function post_delete_comments() {
+		if ( 'POST' == $_SERVER['REQUEST_METHOD']  && isset( $_REQUEST['gdpr_requests'] ) && is_array( $_REQUEST['gdpr_requests'] ) ) {
+
+
 			foreach ( $_REQUEST['gdpr_requests'] as $single_request_id ) {
+				//get all selected comments
+				//unserialize
 				$single_request_id  = sanitize_text_field( $single_request_id );
 				$comments_to_delete = $this->find_delete_request_by_id( $single_request_id );
+				$unserialized_comments = $this->unserialize( $comments_to_delete['comments'] );
+				//check post request
+				if ( isset( $_REQUEST['gdpr_delete_comments'] ) ) {
+					//delete
+					//change status in delete
+					$this->delete_comments( $unserialized_comments );
+					$this->update_status( $single_request_id, 1 );
+					$this->set_notice( __( 'Comments deleted', 'wp_gdpr' ) );
+				}
 
-				$this->unserialize_array_and_delete_comments( $comments_to_delete['comments'] );
-				$this->update_status_delete_request( $single_request_id, 1 );
-				$this->set_notice( __( 'Comments deleted', 'wp_gdpr' ) );
+				//check post request
+				if ( isset( $_REQUEST['gdpr_anonymous_comments'] ) ) {
+					//make anonymous
+					//change status into anonymous
+					$this->make_anonymous( $unserialized_comments );
+					$this->update_status( $single_request_id, 2 );
+					$this->set_notice( __( 'Comments are anonymous', 'wp_gdpr' ) );
+				}
+
 				$to      = $comments_to_delete['email'];
 				$subject = __( 'We confirm Your comments deletion request', 'wp_gdpr' );
 				$content = $this->get_confirmation_email_content( $comments_to_delete );
@@ -46,19 +65,6 @@ class Controller_Menu_Page {
 			}
 		}
 	}
-
-	public function request_add_on(){
-        if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['request_add_on'] ) ) {
-            $to = 'info@wp-gdpr.eu';
-            $subject = 'request wp-gdpr add-on';
-            $content = '<p>Request develop add-on for plugin: ' . $_POST["request_add_on"] . '</p><p>Email: ' . $_POST["email"] . '</p><p>' . $_POST["gdpr"] . '</p>';
-            $headers = array( 'Content-Type: text/html; charset=UTF-8' );
-
-            wp_mail( $to, $subject, $content, $headers );
-
-            $this->set_notice( __( 'Request send', 'wp_gdpr' ) );
-        }
-    }
 
 	/**
 	 * @param $id
@@ -86,19 +92,45 @@ class Controller_Menu_Page {
 	/**
 	 * @param $serialized_comments
 	 *
+	 * @return mixed
+	 */
+	public function unserialize( $serialized_comments ) {
+		$comments_to_delete = unserialize( $serialized_comments );
+
+		return $comments_to_delete;
+	}
+
+	/**
+	 * @param $comments
+	 *
 	 * unserialize serialized array with comments_ids
 	 */
-	public function unserialize_array_and_delete_comments( $serialized_comments ) {
-		$comments_to_delete = unserialize( $serialized_comments );
-		foreach ( $comments_to_delete as $comment_id ) {
+	public function delete_comments( $comments ) {
+		foreach ( $comments as $comment_id ) {
 			wp_delete_comment( $comment_id, true );
 		}
 	}
 
 	/**
+	 * @param $comments
+	 * make comments anonymous
+	 */
+	public function make_anonymous( $comments ) {
+		foreach ( $comments as $comment_id ) {
+			$args = array(
+				'comment_ID' => $comment_id,
+				'comment_author' => 'anonymous',
+				'comment_author_email' => 'anonymous@anony.eu',
+				'comment_author_url' => ''
+			);
+
+			wp_update_comment( $args );
+		}
+	}
+	/**
 	 * delete row by id from table with delete_requests
 	 */
-	public function update_status_delete_request( $request_id, $status ) {
+	public function update_status( $request_id, $status ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . Gdpr_Customtables::DELETE_REQUESTS_TABLE_NAME;
 		$where      = array( 'ID' => $request_id );
@@ -121,6 +153,19 @@ class Controller_Menu_Page {
 		include_once GDPR_DIR . 'view/admin/email-confirmation-content.php';
 
 		return ob_get_clean();
+	}
+
+	public function request_add_on() {
+		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['request_add_on'] ) ) {
+			$to      = 'info@wp-gdpr.eu';
+			$subject = 'request wp-gdpr add-on';
+			$content = '<p>Request develop add-on for plugin: ' . $_POST["request_add_on"] . '</p><p>Email: ' . $_POST["email"] . '</p><p>' . $_POST["gdpr"] . '</p>';
+			$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+
+			wp_mail( $to, $subject, $content, $headers );
+
+			$this->set_notice( __( 'Request send', 'wp_gdpr' ) );
+		}
 	}
 
 	/**
@@ -361,7 +406,7 @@ class Controller_Menu_Page {
 				__( 'comments(ID)', 'wp_gdrp' ),
 				__( 'requested at', 'wp_gdrp' ),
 				__( 'status', 'wp_gdrp' ),
-				__( 'delete', 'wp_gdrp' )
+				__( 'select', 'wp_gdrp' )
 			),
 			$requests
 			, array( $this->get_delete_form_content() ) );
@@ -385,10 +430,13 @@ class Controller_Menu_Page {
 	public function map_status( $request ) {
 		switch ( $request['status'] ) {
 			case 0:
-				$request['status'] = __( 'waiting to delete', 'wp_gdpr' );
+				$request['status'] = __( 'waiting to process', 'wp_gdpr' );
 				break;
 			case 1:
 				$request['status'] = __( 'deleted', 'wp_gdpr' );
+				break;
+			case 2:
+				$request['status'] = __( 'anonymous', 'wp_gdpr' );
 				break;
 		}
 
@@ -399,7 +447,7 @@ class Controller_Menu_Page {
 		if ( '0' === $request['status'] ) {
 			$request['checkbox'] = $this->create_checkbox_for_single_delete_row( $request['ID'] );
 		} else {
-			$request['checkbox'] = __( 'deleted', 'wp_gdpr' );
+			$request['checkbox'] = __( 'processed', 'wp_gdpr' );
 		}
 
 		return $request;
@@ -435,21 +483,6 @@ class Controller_Menu_Page {
 	}
 
 	/**
-	 * @param array $plugins
-	 *
-	 * @return array
-	 */
-	public function filter_plugins( $plugins ) {
-		return array_map( function ( $data ) {
-			if ( isset( $data['name'] ) ) {
-				return array( $data['name'] );
-			}else{
-				return array('empty');
-			}
-		}, $plugins );
-	}
-
-	/**
 	 * @return array|bool|mixed|object|string
 	 */
 	public function get_plugins_array() {
@@ -465,16 +498,30 @@ class Controller_Menu_Page {
 		return $plugins;
 	}
 
+	/**
+	 * @param array $plugins
+	 *
+	 * @return array
+	 */
+	public function filter_plugins( $plugins ) {
+		return array_map( function ( $data ) {
+			if ( isset( $data['name'] ) ) {
+				return array( $data['name'] );
+			} else {
+				return array( 'empty' );
+			}
+		}, $plugins );
+	}
 
-    /**
-     * build form to request add-on
-     */
-    public function build_form_to_request_add_on() {
-        $form = new Gdpr_Form_Builder();
-        $form->print_form();
-    }
+	/**
+	 * build form to request add-on
+	 */
+	public function build_form_to_request_add_on() {
+		$form = new Gdpr_Form_Builder();
+		$form->print_form();
+	}
 
-    public function adminStyle() {
-        wp_enqueue_style( 'gdpr-admin-css', GDPR_URL . 'assets/css/admin.css' );
-    }
+	public function admin_style() {
+		wp_enqueue_style( 'gdpr-admin-css', GDPR_URL . 'assets/css/admin.css' );
+	}
 }
