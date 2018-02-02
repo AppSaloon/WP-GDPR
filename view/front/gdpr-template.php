@@ -68,6 +68,7 @@
             text-transform: capitalize;
             background-color: #3498db;
             color: #ffffff;
+            height: initial;
         }
     </style>
     <title><?php _e('View Comments', 'wp_gdpr'); ?></title>
