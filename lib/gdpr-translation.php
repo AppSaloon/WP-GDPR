@@ -10,7 +10,6 @@ Class Gdpr_Translation{
     }
 
     public function myplugin_load_textdomain(){
-        load_plugin_textdomain( 'wp_gdpr', false,  GDPR_BASE_NAME . '/languages'  );
-        //load_textdomain('wp_gdpr', GDPR_DIR .'languages/wp_gdpr-'.get_locale().'.mo' );
+        load_plugin_textdomain( 'wp_gdpr', false,  GDPR_BASE_NAME . '/languages/'  );
     }
 }
