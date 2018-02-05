@@ -18,11 +18,7 @@ class Controller_Comments {
 	public $register_here;
 
 	public function __construct() {
-		$this->redirect_template();
-		$page_slug = trim( $_SERVER["REQUEST_URI"], '/' );
-		if ( strpos( $page_slug, 'gdpr' ) !== false ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'load_style' ), 10 );
-		}
+		add_action( 'wp_enqueue_scripts', array( $this, 'load_style' ), 10 );
 		add_action( 'init', array( $this, 'save_delete_request' ) );
 		add_action( 'init', array( $this, 'download_csv' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
@@ -31,31 +27,29 @@ class Controller_Comments {
 		// comment form validation
 		add_filter( 'pre_comment_approved', array( $this, 'preprocess_comment_callback' ), 1 );
 		add_filter( 'comment_form_default_fields', array( $this, 'comment_form_default_fields_callback' ), 1 );
+		//rewrite and redirect to page that doesn't exist
+		add_action( 'init', array( $this, 'fake_page_rewrite' ) );
+		add_action( 'template_redirect', array( $this, 'fake_page_redirect' ) );
 	}
 
-	/**
-	 * @param $fields
-	 *
-	 * @return mixed
-	 * add extra input
-	 */
-	public function comment_form_default_fields_callback( $fields ) {
-		$fields['gdpr'] =  '<p class="comment-form-gdpr">' . '<label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our privacy policy where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) .  ' <span class="required">*</span></label> ' .
-		                   '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __('Agree', 'wp_gdpr') . '</p>';
-		return $fields;
-	}
+	function fake_page_redirect() {
 
-	/**
-	 * redirect template when GET request for unique url
-	 */
-	public function redirect_template() {
-		if ( $this->decode_url_request() ) {
-			add_action( 'template_redirect', array( $this, 'get_template' ) );
+		global $wp;
+
+		//retrieve the query vars and store as variable $template
+		$template = $wp->query_vars;
+
+		//pass the $template variable into the conditional statement and
+		//check if the key 'test' is one of the query_vars held in the $template array
+		//and that 'test' is equal to the value of the key which is set
+		if ( array_key_exists( 'gdpr', $template ) && $this->decode_url_request( $template['gdpr'] ) ) {
+			//if the key 'test' exists and 'test' matches the value of that key
 			$this->register_here = true;
-			/**
-			 * update status to 'url visited'
-			 */
+			//then return the template specified below to handle presentation
+			$controller = $this;
 			$this->update_gdpr_status( $this->email_request );
+			include_once GDPR_DIR . 'view/front/gdpr-template.php';
+			exit;
 		}
 	}
 
@@ -63,11 +57,9 @@ class Controller_Comments {
 	 * @return bool
 	 * example url home.be/gdpr#example@mail.com
 	 */
-	public function decode_url_request() {
-		//remove slash
-		$substring = substr( $_SERVER['REQUEST_URI'], 1 );
+	public function decode_url_request( $encoded_url ) {
 		//decode base64 result is gdpr#example@mail.com
-		$decoded = base64_decode( $substring );
+		$decoded = base64_decode( $encoded_url );
 		if ( strpos( $decoded, 'gdpr#' ) !== false ) {
 			//explode into array( 'gdpr', 'example@email.com' )
 			//get second element from array
@@ -99,14 +91,43 @@ class Controller_Comments {
 		$wpdb->update( $table_name, array( 'status' => 2 ), array( 'email' => $email ) );
 	}
 
+	function fake_page_rewrite() {
+
+		global $wp_rewrite;
+		//set up our query variable %test% which equates to index.php?test=
+		add_rewrite_tag( '%gdpr%', '([^&]+)' );
+		//add rewrite rule that matches /test
+		add_rewrite_rule( '^gdpr/(.+)?', 'index.php?gdpr=$matches[1]', 'top' );
+		//add endpoint, in this case 'test' to satisfy our rewrite rule /test
+		add_rewrite_endpoint( 'gdpr', EP_PERMALINK | EP_PAGES );
+		//flush rules to get this to work properly (do this once, then comment out)
+		$wp_rewrite->flush_rules();
+	}
+
+	/**
+	 * @param $fields
+	 *
+	 * @return mixed
+	 * add extra input
+	 */
+	public function comment_form_default_fields_callback( $fields ) {
+		$fields['gdpr'] = '<p class="comment-form-gdpr">' . '<label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our privacy policy where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' <span class="required">*</span></label> ' .
+		                  '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __( 'Agree', 'wp_gdpr' ) . '</p>';
+
+		return $fields;
+	}
+
 	public function preprocess_comment_callback( $data ) {
 		if ( ! isset( $_POST['gdpr'] ) || $_POST['gdpr'] !== 'on' ) {
-			return new \WP_Error( 'comment_gdpr_required',__( '<strong>ERROR</strong>: please fill the required fields (GDPR checkbox).' ), 409 );
+			return new \WP_Error( 'comment_gdpr_required', __( '<strong>ERROR</strong>: please fill the required fields (GDPR checkbox).' ), 409 );
 		}
 
 		return $data;
 	}
 
+	/**
+	 * ajax endpoing
+	 */
 	public function wp_gdpr() {
 		switch ( $_REQUEST['action_switch'] ) {
 			case 'edit_comment':
@@ -220,17 +241,6 @@ class Controller_Comments {
 	}
 
 	/**
-	 * get template to show comments and other data
-	 * about user with requested e-mail address
-	 * set variable $controller to use in template
-	 */
-	public function get_template() {
-		$controller = $this;
-		include_once GDPR_DIR . 'view/front/gdpr-template.php';
-		wp_die();
-	}
-
-	/**
 	 * build table with all comments
 	 * selected by e-mail address
 	 */
@@ -306,7 +316,10 @@ class Controller_Comments {
 	}
 
 	public function load_style() {
-		wp_enqueue_style( 'gdpr-main-css', GDPR_URL . 'assets/css/main.css' );
+		global $wp;
+		if ( isset( $wp->query_vars['gdpr'] ) ) {
+			wp_enqueue_style( 'gdpr-main-css', GDPR_URL . 'assets/css/main.css' );
+		}
 	}
 
 	public function save_delete_request() {

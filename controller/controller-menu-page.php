@@ -390,7 +390,7 @@ class Controller_Menu_Page {
 	 * encode gdpr#example@email.com into base64
 	 */
 	public function create_unique_url( $email, $timestamp ) {
-		return home_url() . '/' . base64_encode( 'gdpr#' . $email . '#' . base64_encode( $timestamp ) );
+		return site_url() . '/gdpr/' . base64_encode( 'gdpr#' . $email . '#' . base64_encode( $timestamp ) );
 	}
 
 	public function update_gdpr_request_status( $email ) {
