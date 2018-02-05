@@ -23,3 +23,11 @@ input[type="submit"]:hover{
     color: #fff;
     background-color:#2c4257;
 }
+
+input[name="checkbox_gdpr"]{
+    background-colo: red;
+    display: inline-block;
+}
+label[for="checkbox_gdpr"]{
+    display: inline;
+}

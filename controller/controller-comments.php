@@ -304,7 +304,8 @@ class Controller_Comments {
 
 	public function load_style() {
 		global $wp;
-		if ( isset( $wp->query_vars['gdpr'] ) ) {
+        $page_slug = trim( $_SERVER["REQUEST_URI"], '/' );
+        if ( isset( $wp->query_vars['gdpr'] ) || strpos( $page_slug, 'gdpr' ) !== false ) {
 			wp_enqueue_style( 'gdpr-main-css', GDPR_URL . 'assets/css/main.css' );
 		}
 	}

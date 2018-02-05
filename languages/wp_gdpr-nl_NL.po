@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP GDPR CORE\n"
-"POT-Creation-Date: 2018-02-02 14:56+0100\n"
-"PO-Revision-Date: 2018-02-02 15:01+0100\n"
+"POT-Creation-Date: 2018-02-05 16:44+0100\n"
+"PO-Revision-Date: 2018-02-05 16:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -21,11 +21,11 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: config/startup-config.php:40
+#: config/startup-config.php:50
 msgid "GDPR - Request personal data"
 msgstr "GDPR - Verzoek voor inzage in persoonlijke data"
 
-#: controller/controller-comments.php:43
+#: controller/controller-comments.php:102
 msgid ""
 "This form collects your name, email and content so that we can keep track of "
 "the comments placed on the website. For more info check our privacy policy "
@@ -36,69 +36,69 @@ msgstr ""
 "policy, waarin je meer info krijgt over waar, hoe en waarom we uw gegevens "
 "bewaren."
 
-#: controller/controller-comments.php:44
+#: controller/controller-comments.php:103
 msgid "Agree"
 msgstr "Akkoord"
 
-#: controller/controller-comments.php:104
+#: controller/controller-comments.php:108
 msgid ""
 "<strong>ERROR</strong>: please fill the required fields (GDPR checkbox)."
 msgstr ""
 "<strong>ERROR</strong>: vul de vereiste velden in (GDPR selectievakje)."
 
-#: controller/controller-comments.php:120
+#: controller/controller-comments.php:127
 msgid "Something went wrong."
 msgstr "Er is iets fout gegaan."
 
-#: controller/controller-comments.php:127
+#: controller/controller-comments.php:134
 msgid "Email is not valid"
 msgstr "E-mail is niet geldig"
 
-#: controller/controller-comments.php:143
+#: controller/controller-comments.php:150
 msgid "Comment is changed"
 msgstr "Reactie is aangepast"
 
-#: controller/controller-comments.php:199
+#: controller/controller-comments.php:207
 msgid "name"
 msgstr "naam"
 
-#: controller/controller-comments.php:200
+#: controller/controller-comments.php:208
 msgid "email"
 msgstr "e-mail"
 
-#: controller/controller-comments.php:201
+#: controller/controller-comments.php:209
 msgid "comment"
 msgstr "reactie"
 
-#: controller/controller-comments.php:202
+#: controller/controller-comments.php:210
 msgid "website"
 msgstr "website"
 
-#: controller/controller-comments.php:244
+#: controller/controller-comments.php:241
 msgid "comment date"
 msgstr "reactie datum"
 
-#: controller/controller-comments.php:245
+#: controller/controller-comments.php:242
 msgid "author email"
 msgstr "e-mailadres"
 
-#: controller/controller-comments.php:246
+#: controller/controller-comments.php:243
 msgid "author name"
 msgstr "naam"
 
-#: controller/controller-comments.php:247
+#: controller/controller-comments.php:244
 msgid "comment content"
 msgstr "reactie inhoud"
 
-#: controller/controller-comments.php:248
+#: controller/controller-comments.php:245
 msgid "post ID"
 msgstr "post ID"
 
-#: controller/controller-comments.php:249
+#: controller/controller-comments.php:246
 msgid "delete"
 msgstr "verwijderen"
 
-#: controller/controller-comments.php:334
+#: controller/controller-comments.php:335
 msgid "The site administrator received your request. Thank You."
 msgstr "De sitebeheerder heeft je aanvraag goed ontvangen."
 
@@ -308,11 +308,23 @@ msgstr "Bekijk je reacties"
 msgid "E-mail"
 msgstr "E-mail"
 
-#: view/front/form.php:11
+#: view/front/form.php:12
+#, php-format
+msgid ""
+"I consent to having %s collect my email so that they can send me my "
+"requested info.\n"
+"            For more info check our privacy policy where you'll get more "
+"info on where, how and why we store your data."
+msgstr ""
+"Ik stem ermee in dat %s mijn e-mailadres bewaart zodat zij mijn vraag voor "
+"info kunnen behandelen\n"
+"             Voor meer info kan u ons privacybeleid nalezen."
+
+#: view/front/form.php:21
 msgid "Submit"
 msgstr "Verstuur"
 
-#: view/front/form.php:14
+#: view/front/form.php:26
 msgid "Thank You! We will send You e-mail in 48h."
 msgstr "Bedankt! We sturen u binnen 48 uur een e-mail."
 

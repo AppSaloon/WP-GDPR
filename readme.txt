@@ -48,3 +48,10 @@ Version 1.1.0
 
 Version 1.1.1
     - Add update_comments.js
+
+
+Version 1.1.2
+    - update page template comments overview page
+    - Add checkbox when data is requested
+    - Update front-end translation
+    - Add translation PL
