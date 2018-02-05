@@ -45,7 +45,8 @@ class Wp_Gdpr_Core {
 		//list of inputs in request form
 		$this->request_form_inputs = array(
 			'email'    => 'required',
-			'gdpr_req' => 'required'
+			'gdpr_req' => 'required',
+			'checkbox_gdpr' => 'required'
 		);
 		$this->run();
 		$this->execute_on_plugin_activation();
