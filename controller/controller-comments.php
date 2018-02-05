@@ -25,7 +25,8 @@ class Controller_Comments {
 		add_action( 'wp_ajax_nopriv_wp_gdpr', array( $this, 'wp_gdpr' ) );
 		// comment form validation
 		add_filter( 'pre_comment_approved', array( $this, 'preprocess_comment_callback' ), 1 );
-		add_filter( 'comment_form_default_fields', array( $this, 'comment_form_default_fields_callback' ), 1 );
+		add_filter( 'comment_form_field_comment', array( $this, 'comment_form_default_fields_callback' ), 1 );
+		//comment_form_field_comment
 		//rewrite and redirect to page that doesn't exist
 		add_action( 'init', array( $this, 'fake_page_rewrite' ) );
 		add_action( 'template_redirect', array( $this, 'fake_page_redirect' ) );
@@ -97,17 +98,9 @@ class Controller_Comments {
 		$wp_rewrite->flush_rules();
 	}
 
-	/**
-	 * @param $fields
-	 *
-	 * @return mixed
-	 * add extra input
-	 */
-	public function comment_form_default_fields_callback( $fields ) {
-		$fields['gdpr'] = '<p class="comment-form-gdpr">' . '<label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our privacy policy where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' <span class="required">*</span></label> ' .
-		                  '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __( 'Agree', 'wp_gdpr' ) . '</p>';
-
-		return $fields;
+	function comment_form_default_fields_callback( $comment_field ) {
+		return $comment_field . '<p class="comment-form-gdpr">' . '<label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our privacy policy where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' <span class="required">*</span></label> ' .
+		       '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __( 'Agree', 'wp_gdpr' ) . '</p>';
 	}
 
 	public function preprocess_comment_callback( $data ) {
