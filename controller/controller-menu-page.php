@@ -418,12 +418,12 @@ class Controller_Menu_Page {
 
 		$table = new Gdpr_Table_Builder(
 			array(
-				__( 'id', 'wp_gdrp' ),
-				__( 'e-mail', 'wp_gdrp' ),
-				__( 'comments(ID)', 'wp_gdrp' ),
-				__( 'requested at', 'wp_gdrp' ),
-				__( 'status', 'wp_gdrp' ),
-				__( 'select', 'wp_gdrp' )
+				__( 'id', 'wp_gdpr' ),
+				__( 'e-mail', 'wp_gdpr' ),
+				__( 'comments(ID)', 'wp_gdpr' ),
+				__( 'requested at', 'wp_gdpr' ),
+				__( 'status', 'wp_gdpr' ),
+				__( 'select', 'wp_gdpr' )
 			),
 			$requests
 			, array( $this->get_delete_form_content() ) );

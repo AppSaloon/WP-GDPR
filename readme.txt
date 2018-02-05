@@ -45,3 +45,6 @@ Version 1.1.0
 	- Let users update their name and e-mail
 	- Add download button to comments list
 	- Make it possible for the admin to choose between delete comment or make comment anonymous
+
+Version 1.1.1
+    - Add update_comments.js
