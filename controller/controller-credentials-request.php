@@ -11,16 +11,16 @@ class Controller_Credentials_Request {
 	 */
 	public function __construct( $name ) {
 		$this->add_form_shortcode( $name );
+
 	}
 
 	/**
 	 * add shortcode to show form ( allows to send request for users )
+	 *
 	 * @param $name
 	 */
 	public function add_form_shortcode( $name ) {
-		$shortcode = Gdpr_Container::make( 'wp_gdpr\lib\Gdpr_Shortcode', array( 'name' => $name ) );
-		$shortcode->add_content( $this->get_form_html() );
-		$shortcode->register_shortcode();
+		add_shortcode( $name, array( $this, 'get_form_html' ) );
 	}
 
 	/**
