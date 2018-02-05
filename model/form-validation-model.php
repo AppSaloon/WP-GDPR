@@ -69,7 +69,6 @@ abstract class Form_Validation_Model {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
