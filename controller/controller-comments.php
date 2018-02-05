@@ -15,7 +15,6 @@ class Controller_Comments {
 	 */
 	public $email_request;
 	public $message;
-	public $register_here;
 
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_style' ), 10 );
@@ -39,13 +38,7 @@ class Controller_Comments {
 		//retrieve the query vars and store as variable $template
 		$template = $wp->query_vars;
 
-		//pass the $template variable into the conditional statement and
-		//check if the key 'test' is one of the query_vars held in the $template array
-		//and that 'test' is equal to the value of the key which is set
 		if ( array_key_exists( 'gdpr', $template ) && $this->decode_url_request( $template['gdpr'] ) ) {
-			//if the key 'test' exists and 'test' matches the value of that key
-			$this->register_here = true;
-			//then return the template specified below to handle presentation
 			$controller = $this;
 			$this->update_gdpr_status( $this->email_request );
 			include_once GDPR_DIR . 'view/front/gdpr-template.php';
@@ -188,7 +181,8 @@ class Controller_Comments {
 	}
 
 	public function load_scripts() {
-		if ( $this->register_here == true ) {
+		global $wp;
+		if ( isset( $wp->query_vars['gdpr'] ) ) {
 			wp_enqueue_script( 'gdpr-main-js', GDPR_URL . 'assets/js/update_comments.js', array( 'jquery' ), '', false );
 			wp_localize_script( 'gdpr-main-js', 'localized_object', array(
 				'url'    => admin_url( 'admin-ajax.php' ),
