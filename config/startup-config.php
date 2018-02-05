@@ -4,13 +4,23 @@ namespace wp_gdpr\config;
 
 
 use wp_gdpr\lib\Gdpr_Container;
+use wp_gdpr\lib\Gdpr_Translation;
 
 class Startup_Config {
 
 	public function __construct() {
+	    $this->include_translation();
 		$this->execute_on_script_shutdown();
 		$this->basic_config();
 	}
+
+    /**
+     * include translation
+     */
+	public function include_translation()
+    {
+        new Gdpr_Translation();
+    }
 
 	/**
 	 * add Logging when shutdown script

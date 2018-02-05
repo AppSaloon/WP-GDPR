@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP GDPR CORE\n"
-"POT-Creation-Date: 2018-02-02 14:41+0100\n"
-"PO-Revision-Date: 2018-02-02 15:01+0100\n"
+"POT-Creation-Date: 2018-02-05 09:46+0100\n"
+"PO-Revision-Date: 2018-02-05 09:46+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_BE\n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: config/startup-config.php:40
+#: config/startup-config.php:50
 msgid "GDPR - Request personal data"
 msgstr "GDPR - Verzoek voor inzage in persoonlijke data"
 
