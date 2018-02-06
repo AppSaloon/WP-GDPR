@@ -64,3 +64,6 @@ Version 1.1.3
 
 Version 1.1.4
     - Update typing errors
+
+Version 1.1.5
+    - Delete develop code

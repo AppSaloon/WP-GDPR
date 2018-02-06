@@ -20,8 +20,6 @@
         <br><br>
         <input type="submit" name="gdpr_req" value="<?php _e('Submit', 'wp_gdpr'); ?>">
     </form>
-<?php  else:
-
-    echo get_locale();?>
+<?php  else: ?>
     <h3><?php _e('Thank You! We will send you e-mail in 48h.', 'wp_gdpr'); ?></h3>
 <?php endif; ?>
