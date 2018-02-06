@@ -3,6 +3,7 @@ Contributors: Mieke Nijs, Sebastian Kurzynowski, AppSaloon
 Tags: Personal data, GDPR, European, regulation, data
 Requires at least: 4.6.10
 Tested up to: 4.9.2
+Stable tag: 1.1.4
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -16,9 +17,9 @@ The plugin gives you advice on how to be compliant with GDPR and witch actions y
 The plugin will create a page where users can request access to their personal data, stored on your website.
 In the backend you'll get an overview of the requests users send and you can see which plugins collect personal data and need a 'ask for approval' checkbox.
 
-In a fist stage users who ask to view their personal data will get an email with a unique url on which they can view their comments and ask for a removal per comment.
+In a first stage users who ask to view their personal data will get an email with a unique url on which they can view their comments and ask for a removal per comment.
 When they ask for a removal, the admin has the ability to delete the comment through the wp-gdpr backend.
-All emails will be send automatically.
+All emails will be sent automatically.
 
 In the second stage they can view, update and download their personal data or ask for a removal and this for WP Comments and Contact Form 7 CFDB7.
 
@@ -51,7 +52,15 @@ Version 1.1.1
 
 
 Version 1.1.2
-    - update page template comments overview page
+    - Update page template comments overview page
     - Add checkbox when data is requested
     - Update front-end translation
     - Add translation PL
+
+Version 1.1.3
+    - Add admin css
+    - Add gdpr-translation.php file
+
+
+Version 1.1.4
+    - Update typing errors

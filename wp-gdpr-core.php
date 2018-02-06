@@ -13,7 +13,7 @@
  * @wordpress-plugin
  * Plugin Name:       WP GDPR
  * Description:       Help to handle gdpr regulations.
- * Version:           1.1.2
+ * Version:           1.1.4
  * Text Domain:       wp_gdpr
  * Domain Path:       /languages
  * Author:            AppSaloon

@@ -23,5 +23,5 @@
 <?php  else:
 
     echo get_locale();?>
-    <h3><?php _e('Thank You! We will send You e-mail in 48h.', 'wp_gdpr'); ?></h3>
+    <h3><?php _e('Thank You! We will send you e-mail in 48h.', 'wp_gdpr'); ?></h3>
 <?php endif; ?>

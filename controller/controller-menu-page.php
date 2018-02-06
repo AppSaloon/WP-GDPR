@@ -279,7 +279,7 @@ class Controller_Menu_Page {
 				$data['status'] = __( 'waiting for e-mail', 'wp_gdpr' );
 				break;
 			case 1:
-				$data['status'] = __( 'e-mail send', 'wp_gdpr' );
+				$data['status'] = __( 'e-mail sent', 'wp_gdpr' );
 				break;
 			case 2:
 				$data['status'] = __( 'url is visited', 'wp_gdpr' );
@@ -333,7 +333,7 @@ class Controller_Menu_Page {
 
 				$content = $this->get_email_content( $request[0]['email'], $request[0]['timestamp'] );
 
-				$this->set_notice( __( 'E-mail send', 'wp_gdpr' ) );
+				$this->set_notice( __( 'E-mail sent', 'wp_gdpr' ) );
 
 				wp_mail( $to, $subject, $content, $headers );
 
