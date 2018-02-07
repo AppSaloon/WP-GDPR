@@ -1,9 +1,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP GDPR CORE\n"
-"POT-Creation-Date: 2018-02-02 14:56+0100\n"
-"PO-Revision-Date: 2018-02-05 15:48+0100\n"
+"POT-Creation-Date: 2018-02-07 13:21+0100\n"
+"PO-Revision-Date: 2018-02-07 13:23+0100\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,16 +19,14 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
-"Last-Translator: \n"
-"Language: pl\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: config/startup-config.php:40
+#: config/startup-config.php:50
 msgid "GDPR - Request personal data"
 msgstr "GDPR - zapytanie o dane osobowe"
 
-#: controller/controller-comments.php:43
+#: controller/controller-comments.php:102
 msgid ""
 "This form collects your name, email and content so that we can keep track of "
 "the comments placed on the website. For more info check our privacy policy "
@@ -37,68 +37,70 @@ msgstr ""
 "polityką prywatności, gdzie znajdziesz więcej informacji o tym, gdzie, jak i "
 "dlaczego przechowujemy Twoje dane."
 
-#: controller/controller-comments.php:44
+#: controller/controller-comments.php:103
 msgid "Agree"
 msgstr "Zgadzam się"
 
-#: controller/controller-comments.php:104
+#: controller/controller-comments.php:108
 msgid ""
 "<strong>ERROR</strong>: please fill the required fields (GDPR checkbox)."
 msgstr "<strong>ERROR</strong>: proszę wypełnić wymagane pola (GDPR checkbox)."
 
-#: controller/controller-comments.php:120
+#: controller/controller-comments.php:127
 msgid "Something went wrong."
 msgstr "Coś poszło nie tak."
 
-#: controller/controller-comments.php:127
+#: controller/controller-comments.php:134
 msgid "Email is not valid"
 msgstr "Email jest nieprawidłowy"
 
-#: controller/controller-comments.php:143
+#: controller/controller-comments.php:150
 msgid "Comment is changed"
 msgstr "Komentarz został zmieniony"
 
-#: controller/controller-comments.php:199
+#: controller/controller-comments.php:207
 msgid "name"
 msgstr "imię"
 
-#: controller/controller-comments.php:200
+#: controller/controller-comments.php:208
+#: controller/controller-menu-page.php:208
+#: controller/controller-menu-page.php:422
 msgid "email"
 msgstr "email"
 
-#: controller/controller-comments.php:201
+#: controller/controller-comments.php:209
 msgid "comment"
 msgstr "Komentarz"
 
-#: controller/controller-comments.php:202
+#: controller/controller-comments.php:210
 msgid "website"
 msgstr "strona internetowa "
 
-#: controller/controller-comments.php:244
+#: controller/controller-comments.php:241
 msgid "comment date"
 msgstr "data komentarza"
 
-#: controller/controller-comments.php:245
+#: controller/controller-comments.php:242
 msgid "author email"
 msgstr "email autora"
 
-#: controller/controller-comments.php:246
+#: controller/controller-comments.php:243
 msgid "author name"
 msgstr "imię autora"
 
-#: controller/controller-comments.php:247
+#: controller/controller-comments.php:244
 msgid "comment content"
 msgstr "treść komentarza"
 
-#: controller/controller-comments.php:248
+#: controller/controller-comments.php:245
 msgid "post ID"
 msgstr "ID postu"
 
-#: controller/controller-comments.php:249
+#: controller/controller-comments.php:246
 msgid "delete"
 msgstr "usuń"
 
-#: controller/controller-comments.php:334
+#: controller/controller-comments.php:335
 msgid "The site administrator received your request. Thank You."
 msgstr "Administrator witryny otrzymał Twoją prośbę. Dziękuję."
 
@@ -131,11 +133,6 @@ msgstr "Żądanie wysłano"
 msgid "id"
 msgstr "Id"
 
-#: controller/controller-menu-page.php:208
-#: controller/controller-menu-page.php:422
-msgid "e-mail"
-msgstr "e-mail"
-
 #: controller/controller-menu-page.php:209
 #: controller/controller-menu-page.php:424
 msgid "requested at"
@@ -147,15 +144,15 @@ msgid "status"
 msgstr "Status"
 
 #: controller/controller-menu-page.php:211
-msgid "resend e-mail"
+msgid "resend email"
 msgstr "ponownie wyślij wiadomość e-mail"
 
 #: controller/controller-menu-page.php:279
-msgid "waiting for e-mail"
+msgid "waiting for email"
 msgstr "czeka na e-mail"
 
 #: controller/controller-menu-page.php:282
-msgid "e-mail send"
+msgid "email sent"
 msgstr "wysłano e-mail"
 
 #: controller/controller-menu-page.php:285
@@ -167,7 +164,7 @@ msgid "Data request"
 msgstr "Żądanie danych"
 
 #: controller/controller-menu-page.php:336
-msgid "E-mail send"
+msgid "Email sent"
 msgstr "wysłano E-mail"
 
 #: controller/controller-menu-page.php:423
@@ -202,7 +199,7 @@ msgstr "nazwa wtyczki"
 msgid "Request add-on for your plugin"
 msgstr "Zapytaj o dodatek dla Twojej wtyczki"
 
-#: lib/gdpr-form-builder.php:35
+#: lib/gdpr-form-builder.php:35 view/front/form.php:8
 msgid "Email"
 msgstr "Email"
 
@@ -291,7 +288,7 @@ msgid "Download comments"
 msgstr "Pobierz komentarze"
 
 #: view/admin/small-form.php:9
-msgid "Resend e-mails"
+msgid "Resend emails"
 msgstr "Wyślij ponownie e-maile"
 
 #: view/front/email-template.php:107
@@ -306,16 +303,25 @@ msgstr ""
 msgid "Check your comments"
 msgstr "Sprawdź swoje komentarze"
 
-#: view/front/form.php:8
-msgid "E-mail"
-msgstr "E-mail"
+#: view/front/form.php:12
+#, php-format
+msgid ""
+"I consent to having %s collect my email so that they can send me my "
+"requested info.\n"
+"            For more info check our privacy policy where you'll get more "
+"info on where, how and why we store your data."
+msgstr ""
+"Ten formularz gromadzi twoje imię i nazwisko, adres e-mail i treść na "
+"stronie internetowej. Aby uzyskać więcej informacji, zapoznaj się z naszą "
+"polityką prywatności, gdzie znajdziesz więcej informacji o tym, gdzie, jak i "
+"dlaczego przechowujemy Twoje dane."
 
-#: view/front/form.php:11
+#: view/front/form.php:21
 msgid "Submit"
 msgstr "Zatwierdź"
 
-#: view/front/form.php:14
-msgid "Thank You! We will send You e-mail in 48h."
+#: view/front/form.php:24
+msgid "Thank You! We will send you email in 48h."
 msgstr "Dziękuję Ci! Wyślemy Ci e-mail w 48h."
 
 #: view/front/gdpr-template.php:74
@@ -323,7 +329,7 @@ msgid "View Comments"
 msgstr "Zobacz komentarze"
 
 #: view/front/gdpr-template.php:80
-msgid "All comments added by e-mail address"
+msgid "All comments added by email address"
 msgstr "Wszystkie komentarze dodane przez adres e-mail"
 
 #. Plugin Name of the plugin/theme
@@ -342,5 +348,11 @@ msgstr "AppSaloon"
 msgid "https://www.appsaloon.be"
 msgstr "https://www.appsaloon.be"
 
-msgid "Appsaloon - Sebastian Kurzynowski, Mieke Nijs"
-msgstr "Appsaloon - Sebastian Kurzynowski, Mieke Nijs"
+#~ msgid "e-mail"
+#~ msgstr "e-mail"
+
+#~ msgid "E-mail"
+#~ msgstr "E-mail"
+
+#~ msgid "Appsaloon - Sebastian Kurzynowski, Mieke Nijs"
+#~ msgstr "Appsaloon - Sebastian Kurzynowski, Mieke Nijs"

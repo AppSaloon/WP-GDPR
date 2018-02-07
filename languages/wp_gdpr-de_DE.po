@@ -1,9 +1,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP GDPR CORE\n"
-"POT-Creation-Date: 2018-02-06 09:06+0100\n"
-"PO-Revision-Date: 2018-02-07 11:43+0100\n"
+"POT-Creation-Date: 2018-02-07 13:20+0100\n"
+"PO-Revision-Date: 2018-02-07 13:20+0100\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,8 +18,6 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
-"Last-Translator: \n"
-"Language: de\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
@@ -64,6 +64,8 @@ msgid "name"
 msgstr "name"
 
 #: controller/controller-comments.php:208
+#: controller/controller-menu-page.php:208
+#: controller/controller-menu-page.php:422
 msgid "email"
 msgstr "E-Mail"
 
@@ -132,11 +134,6 @@ msgstr "Anfrage gesendet"
 msgid "id"
 msgstr "ID"
 
-#: controller/controller-menu-page.php:208
-#: controller/controller-menu-page.php:422
-msgid "e-mail"
-msgstr "E-Mail"
-
 #: controller/controller-menu-page.php:209
 #: controller/controller-menu-page.php:424
 msgid "requested at"
@@ -148,15 +145,15 @@ msgid "status"
 msgstr "Status"
 
 #: controller/controller-menu-page.php:211
-msgid "resend e-mail"
+msgid "resend email"
 msgstr "E-Mail erneut senden"
 
 #: controller/controller-menu-page.php:279
-msgid "waiting for e-mail"
+msgid "waiting for email"
 msgstr "Warten auf E-Mail"
 
 #: controller/controller-menu-page.php:282
-msgid "e-mail sent"
+msgid "email sent"
 msgstr "E-Mail versendet"
 
 #: controller/controller-menu-page.php:285
@@ -168,7 +165,7 @@ msgid "Data request"
 msgstr "Datenanforderung"
 
 #: controller/controller-menu-page.php:336
-msgid "E-mail sent"
+msgid "Email sent"
 msgstr "E-Mail versendet"
 
 #: controller/controller-menu-page.php:423
@@ -203,7 +200,7 @@ msgstr "Plugin-Name"
 msgid "Request add-on for your plugin"
 msgstr "Fordern Sie ein Add-on für dem GDPR(DSGVO) Plugin an"
 
-#: lib/gdpr-form-builder.php:35
+#: lib/gdpr-form-builder.php:35 view/front/form.php:8
 msgid "Email"
 msgstr "E-­Mail"
 
@@ -292,7 +289,7 @@ msgid "Download comments"
 msgstr "Kommentare herunterladen"
 
 #: view/admin/small-form.php:9
-msgid "Resend e-mails"
+msgid "Resend emails"
 msgstr "E-Mail erneut senden"
 
 #: view/front/email-template.php:107
@@ -307,10 +304,6 @@ msgstr ""
 #: view/front/email-template.php:115
 msgid "Check your comments"
 msgstr "Überprüfen Sie Ihre Kommentare"
-
-#: view/front/form.php:8
-msgid "E-mail"
-msgstr "E-mail"
 
 #: view/front/form.php:12
 #, php-format
@@ -330,8 +323,8 @@ msgstr ""
 msgid "Submit"
 msgstr "Senden"
 
-#: view/front/form.php:26
-msgid "Thank You! We will send you e-mail in 48h."
+#: view/front/form.php:24
+msgid "Thank You! We will send you email in 48h."
 msgstr "Danke! Wir senden Ihnen eine E-Mail in 48 Stunden."
 
 #: view/front/gdpr-template.php:74
@@ -339,7 +332,7 @@ msgid "View Comments"
 msgstr "Kommentare ansehen"
 
 #: view/front/gdpr-template.php:80
-msgid "All comments added by e-mail address"
+msgid "All comments added by email address"
 msgstr "Alle Kommentare hinzugefügt per E-Mail-Adresse"
 
 #. Plugin Name of the plugin/theme
@@ -358,5 +351,11 @@ msgstr "AppSaloon"
 msgid "https://www.appsaloon.be"
 msgstr "https://www.appsaloon.be"
 
-msgid "Appsaloon - Sebastian Kurzynowski, Mieke Nijs"
-msgstr "Appsaloon - Sebastian Kurzynowski, Mieke Nijs, Mark creeten"
+#~ msgid "e-mail"
+#~ msgstr "E-Mail"
+
+#~ msgid "E-mail"
+#~ msgstr "E-mail"
+
+#~ msgid "Appsaloon - Sebastian Kurzynowski, Mieke Nijs"
+#~ msgstr "Appsaloon - Sebastian Kurzynowski, Mieke Nijs, Mark creeten"
