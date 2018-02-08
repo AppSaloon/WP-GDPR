@@ -1,0 +1,16 @@
+parameters:
+    git_dir: .
+    bin_dir: /Users/sebastian/.composer/vendor/bin
+    tasks: 
+        git_blacklist:
+            keywords:
+                - "die("
+                - "die;"
+                - "var_dump("
+                - "exit;"
+            triggered_by: ['php']
+            regexp_type: G
+        phan:
+            config_file: .phan/config.php
+            output_mode: text
+            output: output_test.txt
