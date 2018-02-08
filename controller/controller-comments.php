@@ -29,6 +29,16 @@ class Controller_Comments {
 		//comment_form_field_comment
 		//rewrite and redirect to page that doesn't exist
 		add_action( 'template_redirect', array( $this, 'fake_page_redirect' ) );
+		add_filter( 'the_editor', array( $this, 'add_metabox_in_editor' ) );
+		// replycontent
+	}
+
+	public function add_metabox_in_editor( $content ) {
+		if ( false !== strpos( $content, 'replycontent' ) ) {
+			$content = str_replace( '</textarea></div>', '</textarea><p class="comment-form-gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our privacy policy where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' </p></div>', $content );
+		}
+
+		return $content;
 	}
 
 	function fake_page_redirect() {
@@ -88,11 +98,22 @@ class Controller_Comments {
 	}
 
 	function comment_form_default_fields_callback( $comment_field ) {
-		return $comment_field . '<p class="comment-form-gdpr">' . '<label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our privacy policy where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' <span class="required">*</span></label> ' .
+		return $comment_field . $this->get_gdpr_checkbox_for_new_comments();
+	}
+
+	public function get_gdpr_checkbox_for_new_comments() {
+		return '<p class="comment-form-gdpr">' . '<label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our privacy policy where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' <span class="required">*</span></label> ' .
 		       '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __( 'Agree', 'wp_gdpr' ) . '</p>';
+
 	}
 
 	public function preprocess_comment_callback( $data ) {
+
+		//skip admin new comment validation
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX  && is_admin()) {
+			return $data;
+		}
+
 		if ( ! isset( $_POST['gdpr'] ) || $_POST['gdpr'] !== 'on' ) {
 			return new \WP_Error( 'comment_gdpr_required', __( '<strong>ERROR</strong>: please fill the required fields (GDPR checkbox).' ), 409 );
 		}
@@ -295,7 +316,7 @@ class Controller_Comments {
 	public function load_style() {
 		global $wp;
 		$page_slug = trim( $_SERVER["REQUEST_URI"], '/' );
-		
+
 		if ( isset( $wp->query_vars['pagename'] ) && $wp->query_vars['pagename'] == 'gdpr-request-personal-data' || strpos( $page_slug, 'gdpr' ) !== false ) {
 			wp_enqueue_style( 'gdpr-main-css', GDPR_URL . 'assets/css/main.css' );
 		}
