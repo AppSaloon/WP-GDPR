@@ -28,7 +28,6 @@ class Controller_Comments {
 		add_filter( 'comment_form_field_comment', array( $this, 'comment_form_default_fields_callback' ), 1 );
 		//comment_form_field_comment
 		//rewrite and redirect to page that doesn't exist
-		add_action( 'init', array( $this, 'fake_page_rewrite' ) );
 		add_action( 'template_redirect', array( $this, 'fake_page_redirect' ) );
 	}
 
@@ -38,8 +37,7 @@ class Controller_Comments {
 
 		//retrieve the query vars and store as variable $template
 		$template = $wp->query_vars;
-
-		if ( array_key_exists( 'gdpr', $template ) && $this->decode_url_request( $template['gdpr'] ) ) {
+		if ( ! empty( $_GET['req'] ) && $this->decode_url_request( sanitize_text_field( $_GET['req'] ) ) ) {
 			$controller = $this;
 			$this->update_gdpr_status( $this->email_request );
 			include_once GDPR_DIR . 'view/front/gdpr-template.php';
@@ -49,7 +47,7 @@ class Controller_Comments {
 
 	/**
 	 * @return bool
-	 * example url home.be/gdpr#example@mail.com
+	 * example url home.be/gdpr-request-personal-data/?req=Z2RwciNzZWptYWtzQGdtYWlsLmNvbSNNakF4T0Mwd01pMHdPQ0F4TURvd09Eb3lNUT09
 	 */
 	public function decode_url_request( $encoded_url ) {
 		//decode base64 result is gdpr#example@mail.com
@@ -62,7 +60,11 @@ class Controller_Comments {
 			global $wpdb;
 
 			$table_name = $wpdb->prefix . 'gdpr_requests';
-			$time_stamp = base64_decode( explode( '#', $decoded )[2] );
+			if ( isset( explode( '#', $decoded )[2] ) ) {
+				$time_stamp = base64_decode( explode( '#', $decoded )[2] );
+			} else {
+				return false;
+			}
 
 			$query = "SELECT * FROM $table_name WHERE email='$email' AND timestamp='$time_stamp'";
 
@@ -83,19 +85,6 @@ class Controller_Comments {
 		$table_name = $wpdb->prefix . 'gdpr_requests';
 
 		$wpdb->update( $table_name, array( 'status' => 2 ), array( 'email' => $email ) );
-	}
-
-	function fake_page_rewrite() {
-
-		global $wp_rewrite;
-		//set up our query variable %test% which equates to index.php?test=
-		add_rewrite_tag( '%gdpr%', '([^&]+)' );
-		//add rewrite rule that matches /test
-		add_rewrite_rule( '^gdpr/(.+)?', 'index.php?gdpr=$matches[1]', 'top' );
-		//add endpoint, in this case 'test' to satisfy our rewrite rule /test
-		add_rewrite_endpoint( 'gdpr', EP_PERMALINK | EP_PAGES );
-		//flush rules to get this to work properly (do this once, then comment out)
-		$wp_rewrite->flush_rules();
 	}
 
 	function comment_form_default_fields_callback( $comment_field ) {
@@ -175,7 +164,8 @@ class Controller_Comments {
 
 	public function load_scripts() {
 		global $wp;
-		if ( isset( $wp->query_vars['gdpr'] ) ) {
+
+		if ( isset( $wp->query_vars['pagename'] ) && $wp->query_vars['pagename'] == 'gdpr-request-personal-data' ) {
 			wp_enqueue_script( 'gdpr-main-js', GDPR_URL . 'assets/js/update_comments.js', array( 'jquery' ), '', false );
 			wp_localize_script( 'gdpr-main-js', 'localized_object', array(
 				'url'    => admin_url( 'admin-ajax.php' ),
@@ -304,8 +294,9 @@ class Controller_Comments {
 
 	public function load_style() {
 		global $wp;
-        $page_slug = trim( $_SERVER["REQUEST_URI"], '/' );
-        if ( isset( $wp->query_vars['gdpr'] ) || strpos( $page_slug, 'gdpr' ) !== false ) {
+		$page_slug = trim( $_SERVER["REQUEST_URI"], '/' );
+		
+		if ( isset( $wp->query_vars['pagename'] ) && $wp->query_vars['pagename'] == 'gdpr-request-personal-data' || strpos( $page_slug, 'gdpr' ) !== false ) {
 			wp_enqueue_style( 'gdpr-main-css', GDPR_URL . 'assets/css/main.css' );
 		}
 	}

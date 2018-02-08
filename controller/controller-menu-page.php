@@ -369,10 +369,10 @@ class Controller_Menu_Page {
 	}
 
 	/**
-	 * @param $single_adress
+	 * @param $email
+	 * @param $timestamp
 	 *
 	 * @return string content of e-mail
-	 *
 	 */
 	public function get_email_content( $email, $timestamp ) {
 		ob_start();
@@ -383,14 +383,15 @@ class Controller_Menu_Page {
 	}
 
 	/**
-	 * @param $email_address
+	 * @param $email
+	 * @param $timestamp
 	 *
 	 * @return string
 	 * create url
 	 * encode gdpr#example@email.com into base64
 	 */
 	public function create_unique_url( $email, $timestamp ) {
-		return site_url() . '/gdpr/' . base64_encode( 'gdpr#' . $email . '#' . base64_encode( $timestamp ) );
+		return site_url() . '/gdpr-request-personal-data?req=' . base64_encode( 'gdpr#' . $email . '#' . base64_encode( $timestamp ) );
 	}
 
 	public function update_gdpr_request_status( $email ) {
