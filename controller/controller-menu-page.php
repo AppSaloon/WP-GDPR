@@ -205,10 +205,10 @@ class Controller_Menu_Page {
 		$table = new Gdpr_Table_Builder(
 			array(
 				__( 'id', 'wp_gdpr' ),
-				__( 'e-mail', 'wp_gdpr' ),
+				__( 'email', 'wp_gdpr' ),
 				__( 'requested at', 'wp_gdpr' ),
 				__( 'status', 'wp_gdpr' ),
-				__( 'resend e-mail', 'wp_gdpr' )
+				__( 'resend email', 'wp_gdpr' )
 			),
 			$requesting_users
 			, array( $form_content ) );
@@ -276,10 +276,10 @@ class Controller_Menu_Page {
 
 		switch ( $data['status'] ) {
 			case 0:
-				$data['status'] = __( 'waiting for e-mail', 'wp_gdpr' );
+				$data['status'] = __( 'waiting for email', 'wp_gdpr' );
 				break;
 			case 1:
-				$data['status'] = __( 'e-mail sent', 'wp_gdpr' );
+				$data['status'] = __( 'email sent', 'wp_gdpr' );
 				break;
 			case 2:
 				$data['status'] = __( 'url is visited', 'wp_gdpr' );
@@ -304,7 +304,7 @@ class Controller_Menu_Page {
 		foreach ( $requesting_users as $user ) {
 			/**
 			 * if status is 0
-			 * e-mail is not send
+			 * email is not send
 			 *
 			 */
 			if ( $user['status'] == 0 ) {
@@ -315,7 +315,7 @@ class Controller_Menu_Page {
 	}
 
 	/**
-	 * send e-mails when POST request
+	 * send emails when POST request
 	 */
 	public function send_email() {
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_emails'] ) && is_array( $_REQUEST['gdpr_emails'] ) ) {
@@ -333,7 +333,7 @@ class Controller_Menu_Page {
 
 				$content = $this->get_email_content( $request[0]['email'], $request[0]['timestamp'] );
 
-				$this->set_notice( __( 'E-mail sent', 'wp_gdpr' ) );
+				$this->set_notice( __( 'Email sent', 'wp_gdpr' ) );
 
 				wp_mail( $to, $subject, $content, $headers );
 
@@ -372,7 +372,12 @@ class Controller_Menu_Page {
 	 * @param $email
 	 * @param $timestamp
 	 *
+<<<<<<< HEAD
+	 * @return string content of email
+	 *
+=======
 	 * @return string content of e-mail
+>>>>>>> 6cc26b519c32ad4d1f0585f9fe858f420b967ee9
 	 */
 	public function get_email_content( $email, $timestamp ) {
 		ob_start();
@@ -420,7 +425,7 @@ class Controller_Menu_Page {
 		$table = new Gdpr_Table_Builder(
 			array(
 				__( 'id', 'wp_gdpr' ),
-				__( 'e-mail', 'wp_gdpr' ),
+				__( 'email', 'wp_gdpr' ),
 				__( 'comments(ID)', 'wp_gdpr' ),
 				__( 'requested at', 'wp_gdpr' ),
 				__( 'status', 'wp_gdpr' ),

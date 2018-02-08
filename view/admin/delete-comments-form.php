@@ -1,7 +1,7 @@
 <?php
 /**
  * small form to use in table
- * allows to send e-mail with unique urls to users
+ * allows to send email with unique urls to users
  */
 ?>
 <form method="post" id="gdpr_admin_del_comments_form">
