@@ -7,7 +7,6 @@ parameters:
                 - "die("
                 - "die;"
                 - "var_dump("
-                - "exit;"
             triggered_by: ['php']
             regexp_type: G
         phan:

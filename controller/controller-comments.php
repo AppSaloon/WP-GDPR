@@ -26,11 +26,35 @@ class Controller_Comments {
 		// comment form validation
 		add_filter( 'pre_comment_approved', array( $this, 'preprocess_comment_callback' ), 1 );
 		add_filter( 'comment_form_field_comment', array( $this, 'comment_form_default_fields_callback' ), 1 );
+		add_action( 'comment_form_before', array( $this, 'comment_form_default_fields_callback' ), 1 );
 		//comment_form_field_comment
 		//rewrite and redirect to page that doesn't exist
 		add_action( 'template_redirect', array( $this, 'fake_page_redirect' ) );
 		add_filter( 'the_editor', array( $this, 'add_metabox_in_editor' ) );
-		// replycontent
+		/**
+		 * add gdpr checkbox for wpdiscuz plugin
+		 */
+		add_action( 'wpdiscuz_comment_form_top', array( $this, 'echo_checkox_gdpr' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'load_comment_scripts' ) );
+	}
+
+	public function load_comment_scripts() {
+		wp_enqueue_style( 'gdpr-comment-css', GDPR_URL . 'assets/css/new_comment.css' );
+		wp_enqueue_script( 'gdpr-comment-js', GDPR_URL . 'assets/js/validate_comments.js', array( 'jquery' ), '', false );
+		wp_localize_script( 'gdpr-comment-js', 'localized_object', array(
+			'url'    => admin_url( 'admin-ajax.php' ),
+			'action' => 'wp_gdpr'
+		) );
+	}
+
+	public function echo_checkox_gdpr() {
+		echo $this->get_gdpr_checkbox_for_new_comments();
+	}
+
+	public function get_gdpr_checkbox_for_new_comments() {
+		return '<p class="comment-form-gdpr"><div class="js-gdpr-warning"></div><label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our privacy policy where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' <span class="required">*</span></label> ' .
+		       '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __( 'Agree', 'wp_gdpr' ) . '</p>';
+
 	}
 
 	public function add_metabox_in_editor( $content ) {
@@ -42,7 +66,6 @@ class Controller_Comments {
 	}
 
 	function fake_page_redirect() {
-
 		global $wp;
 
 		//retrieve the query vars and store as variable $template
@@ -69,8 +92,6 @@ class Controller_Comments {
 			$this->email_request = $email;
 			global $wpdb;
 
-			$table_name = $wpdb->prefix . 'gdpr_requests';
-			if ( isset( explode( '#', $decoded )[2] ) ) {
 				$time_stamp = base64_decode( explode( '#', $decoded )[2] );
 			} else {
 				return false;
@@ -97,20 +118,14 @@ class Controller_Comments {
 		$wpdb->update( $table_name, array( 'status' => 2 ), array( 'email' => $email ) );
 	}
 
-	function comment_form_default_fields_callback( $comment_field ) {
-		return $comment_field . $this->get_gdpr_checkbox_for_new_comments();
-	}
-
-	public function get_gdpr_checkbox_for_new_comments() {
-		return '<p class="comment-form-gdpr">' . '<label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our privacy policy where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' <span class="required">*</span></label> ' .
-		       '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __( 'Agree', 'wp_gdpr' ) . '</p>';
-
+	function comment_form_default_fields_callback( $content ) {
+		return $content . $this->get_gdpr_checkbox_for_new_comments();
 	}
 
 	public function preprocess_comment_callback( $data ) {
 
 		//skip admin new comment validation
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX  && is_admin()) {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX && is_admin() ) {
 			return $data;
 		}
 
