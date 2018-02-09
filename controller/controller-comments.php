@@ -18,18 +18,23 @@ class Controller_Comments {
 
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_style' ), 10 );
+		//save delete request
 		add_action( 'init', array( $this, 'save_delete_request' ) );
+		//download csv
 		add_action( 'init', array( $this, 'download_csv' ) );
+		//load scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
+		//endpoin ajax
 		add_action( 'wp_ajax_wp_gdpr', array( $this, 'wp_gdpr' ) );
 		add_action( 'wp_ajax_nopriv_wp_gdpr', array( $this, 'wp_gdpr' ) );
 		// comment form validation
 		add_filter( 'pre_comment_approved', array( $this, 'preprocess_comment_callback' ), 1 );
+		//add extra field for comments template
 		add_filter( 'comment_form_field_comment', array( $this, 'comment_form_default_fields_callback' ), 1 );
-		add_action( 'comment_form_before', array( $this, 'comment_form_default_fields_callback' ), 1 );
 		//comment_form_field_comment
 		//rewrite and redirect to page that doesn't exist
 		add_action( 'template_redirect', array( $this, 'fake_page_redirect' ) );
+		//handle new comments in admin page
 		add_filter( 'the_editor', array( $this, 'add_metabox_in_editor' ) );
 		/**
 		 * add gdpr checkbox for wpdiscuz plugin
@@ -351,20 +356,34 @@ class Controller_Comments {
 			) );
 
 			$table_name = $wpdb->prefix . Gdpr_Customtables::DELETE_REQUESTS_TABLE_NAME;
-
+			$email      = sanitize_email( $_REQUEST["gdpr_email"] );
 			$wpdb->insert(
 				$table_name,
 				array(
-					'email'     => sanitize_email( $_REQUEST["gdpr_email"] ),
+					'email'     => $email,
 					'comments'  => serialize( $comments_ids ),
 					'status'    => 0,
 					'timestamp' => current_time( 'mysql' )
 				)
 			);
 			$this->message = '<h3>' . __( "The site administrator received your request. Thank You.", "wp_gdpr" ) . '</h3>';
-			//TODO email to admin
+			$this->send_email_to_admin( $email );
 		}
+	}
 
+	public function send_email_to_admin( $requested_email ) {
+		$subject     = __( 'New delete request', 'wp_gdpr' );
+		$admin_email = get_option( 'admin_email', true );
+		$content     = $this->get_email_content( $requested_email );
+		wp_mail( $admin_email, $subject, $content );
+	}
+
+	public function get_email_content( $requested_email ) {
+		ob_start();
+
+		include GDPR_DIR . 'view/admin/email-delete-request.php';
+
+		return ob_get_clean();
 	}
 
 	/**
