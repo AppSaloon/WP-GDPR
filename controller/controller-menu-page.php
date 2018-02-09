@@ -9,6 +9,7 @@ use wp_gdpr\lib\Gdpr_Container;
 use wp_gdpr\lib\Gdpr_Form_Builder;
 
 class Controller_Menu_Page {
+	const PRIVACY_POLICY_URL = 'privacy_policy_url';
 
 	/**
 	 * Controller_Menu_Page constructor.
@@ -23,7 +24,19 @@ class Controller_Menu_Page {
 		if ( ! has_action( 'init', array( $this, 'request_add_on' ) ) ) {
 			add_action( 'init', array( $this, 'request_add_on' ) );
 		}
+		if ( ! has_action( 'init', array( $this, 'update_privacy_policy_url' ) ) ) {
+			add_action( 'init', array( $this, 'update_privacy_policy_url' ) );
+		}
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_style' ) );
+	}
+
+	/**
+	 * update privacxy policy url when form is submited
+	 */
+	public function update_privacy_policy_url() {
+		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_REQUEST['gdpr_save_priv_pol_link'] )  ) {
+			update_option(self::PRIVACY_POLICY_URL, esc_url_raw($_REQUEST['gdpr_priv_pov_link']));
+		}
 	}
 
 	/**
@@ -183,6 +196,12 @@ class Controller_Menu_Page {
 
 			$this->set_notice( __( 'Request send', 'wp_gdpr' ) );
 		}
+	}
+
+	public function build_form_to_add_privacy_policy_setting() {
+
+		$privacy_policy_url = get_option( self::PRIVACY_POLICY_URL, null );
+		include GDPR_DIR . '/view/admin/privacy-policy-form.php';
 	}
 
 	/**
@@ -372,12 +391,8 @@ class Controller_Menu_Page {
 	 * @param $email
 	 * @param $timestamp
 	 *
-<<<<<<< HEAD
 	 * @return string content of email
 	 *
-=======
-	 * @return string content of e-mail
->>>>>>> 6cc26b519c32ad4d1f0585f9fe858f420b967ee9
 	 */
 	public function get_email_content( $email, $timestamp ) {
 		ob_start();

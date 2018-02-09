@@ -20,6 +20,8 @@ $controller->build_table_with_requests();
     <h2><?php _e('Request your own add-on', 'wp_gdpr'); ?></h2>
     <?php $controller->build_form_to_request_add_on(); ?>
 
+    <h2><?php _e('Privacy policy link', 'wp_gdpr'); ?></h2>
+	<?php $controller->build_form_to_add_privacy_policy_setting(); ?>
 
 </div>
 
