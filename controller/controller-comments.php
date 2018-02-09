@@ -57,8 +57,18 @@ class Controller_Comments {
 	}
 
 	public function get_gdpr_checkbox_for_new_comments() {
-		return '<p class="comment-form-gdpr"><div class="js-gdpr-warning"></div><label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our privacy policy where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' <span class="required">*</span></label> ' .
-		       '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __( 'Agree', 'wp_gdpr' ) . '</p>';
+		$privacy_policy_url = get_option( Controller_Menu_Page::PRIVACY_POLICY_URL, null );
+		if ( null !== $privacy_policy_url ) {
+			$privacy_policy = sprintf( '<a href="%s" target="_blank">privacy policy</a>', $privacy_policy_url );
+		}else{
+
+			$privacy_policy         = 'privacy policy';
+		}
+		 $without_link =  '<p class="comment-form-gdpr"><div class="js-gdpr-warning"></div><label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our %s where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' <span class="required">*</span></label> ' .
+		                          '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __( 'Agree', 'wp_gdpr' ) . '</p>';
+
+		return sprintf($without_link, $privacy_policy);
+
 
 	}
 
