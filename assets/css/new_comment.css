@@ -33,7 +33,10 @@ input[name="checkbox_gdpr"]{
 label[for="checkbox_gdpr"]{
     display: inline;
 }
-
+p.notice{
+    margin-bottom: 0;
+    color: #f0ad4e;
+}
 /*
 this is class for small info box when checkbox in new comment is not checked
  */
@@ -44,5 +47,5 @@ this is class for small info box when checkbox in new comment is not checked
 this is class for submit button in new comment form when checkbox is not checked
  */
 .gdpr-disabled{
-    background-color: orange !important;
+    background-color: #c1c1c1 !important;
 }
