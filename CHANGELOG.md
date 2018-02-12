@@ -1,3 +1,12 @@
+== Version 1.2
+* Fix compatibility with WP Discuz
+* Add functionality to upadate default privacy url
+* Add grumphp configuration
+* Add CHANGELOG.md
+* Add README.md
+* Add git repo on Github: https://github.com/AppSaloon/WP-GDPR
+* Add email notification when sommeone askes for a "delete requests"
+    
 == Version 1.1.6
 * Add .pot file
 * Add german translation

@@ -39,7 +39,7 @@ class Controller_Comments {
 		/**
 		 * add gdpr checkbox for wpdiscuz plugin
 		 */
-		add_action( 'wpdiscuz_comment_form_top', array( $this, 'echo_checkox_gdpr' ) );
+		add_action( 'comment_form_after', array( $this, 'echo_checkox_gdpr' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_comment_scripts' ) );
 	}
 
@@ -64,8 +64,9 @@ class Controller_Comments {
 
 			$privacy_policy = 'privacy policy';
 		}
-		$without_link = '<p class="comment-form-gdpr"><div class="js-gdpr-warning"></div><label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our %s where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' <span class="required">*</span></label> ' .
-		                '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __( 'Agree', 'wp_gdpr' ) . '</p>';
+		
+		 $without_link =  '<p class="notice"><small>* '.__('Checkbox GDPR is required', 'wp_gdpr') . '</small></p>' . '<div class="js-gdpr-warning"></div><p class="comment-form-gdpr"><label for="gdpr">' . __( 'This form collects your name, email and content so that we can keep track of the comments placed on the website. For more info check our %s where you\'ll get more info on where, how and why we store your data.', 'wp_gdpr' ) . ' <span class="required">*</span></label> ' .
+		                          '<input  required="required" id="gdpr" name="gdpr" type="checkbox"  />' . __( 'Agree', 'wp_gdpr' ) . '</p>';
 
 		return sprintf( $without_link, $privacy_policy );
 
